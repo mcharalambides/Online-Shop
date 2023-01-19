@@ -1,0 +1,171 @@
+  /* Add this to the CSS */
+  /* make the container a flex container */
+  html, body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f2f2f2;
+  }
+  /* flex-grow property makes the main content takes remaining space */
+  main {
+    flex-grow: 1;
+  }
+
+  /* Add this to your style.css file */
+header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  #image-banner img {
+    width: 100%;
+    height: 100vh; /* Make the banner height equal to the full screen height */
+    position: relative;
+    object-fit: cover;
+    z-index: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    transition: background-image 0.5s ease-in-out; /* Add the transition property */
+  }
+  
+  .change-banner {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .slide-in {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-in-out;
+  }
+
+  /*NAVBAR*/
+  .navbar {
+    font-size: 30px;
+    padding-top: 100px;
+    font-weight: 600;
+  }
+  /* CSS for calendar portion*/
+  .wrapper {
+    width: 550px;
+    border-radius: 10px;
+    background: #fff;
+    margin-bottom: 40px;
+  }
+  .wrapper .wrapper_header{
+    display: flex;
+    align-items: center;
+    padding: 30px 60px 10px;
+    justify-content: space-between;
+  }
+
+  .wrapper_header .current-date{
+    font-size: 1.45rem;
+    font-weight: 500;
+  }
+
+  .wrapper_header .icons span{
+    height: 50px;
+    width: 38px;
+    color: #878787;
+    font-size: 1.9rem;
+    margin: 0 1px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 50%;
+  }
+
+  .wrapper_header .icons span:hover{
+    background: #cecccc;
+  }
+
+  .wrapper_header .icons span:last-child{
+    margin-right: -10px;
+  }
+  
+  .calendar{
+    padding: 20px;
+  }
+
+  .calendar ul{
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .calendar .days{
+    margin-bottom: 40px;
+  }
+
+  .calendar .weeks li{
+    font-weight: 700;
+  }
+
+  .calendar ul li{
+    position: relative;
+    width: calc(100% / 7);
+  }
+
+  .calendar .days li{
+    z-index: 1;
+    cursor: pointer;
+    margin-top: 30px;
+    font-size:18px;
+  }
+
+  .calendar ul li::before{
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 40px;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .days li:hover::before{
+    background: #cecccc;
+  }
+
+  .days li .active{
+    color: #fff;
+  }
+
+  .days li .inactive{
+    color: #aaa;
+  }
+
+  .btn{
+    color: #accaac;
+    font-weight: 500;
+    background-color: #1d7d07;
+  }
+
+  .logo-image{
+    width: 186px;
+    height: 186px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-top: -6px;
+    padding: .375rem .75rem;
+}
+
+.parallax {
+    /* The image used */
+    background-image: url("image1.jpg");
+  
+    /* Set a specific height */
+    min-height: 500px;
+  
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
