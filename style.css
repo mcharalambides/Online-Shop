@@ -53,6 +53,7 @@ header {
     border-radius: 10px;
     background: #fff;
     margin-bottom: 40px;
+    margin-top: 40px;
   }
   .wrapper .wrapper_header{
     display: flex;
