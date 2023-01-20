@@ -47,6 +47,10 @@ header {
     padding-top: 100px;
     font-weight: 600;
   }
+
+  .nav-link{
+    color: #cecccc;
+  }
   /* CSS for calendar portion*/
   .wrapper {
     width: 550px;
@@ -142,12 +146,6 @@ header {
     color: #aaa;
   }
 
-  .btn{
-    color: #accaac;
-    font-weight: 500;
-    background-color: #1d7d07;
-  }
-
   .logo-image{
     width: 186px;
     height: 186px;
@@ -169,4 +167,17 @@ header {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  #checkoutBtn {
+    color: #000000; 
+    font-weight: 500; 
+    background-color: #fff;
+  }
+
+  .column1{
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    padding-bottom: 30px;
   }
