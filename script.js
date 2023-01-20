@@ -128,6 +128,7 @@ function renderCalendar(month,year){
     for(var i=1; i<=lastDateofMonth; i++){
         li = document.createElement("li");
         li.innerHTML = i;
+        li.setAttribute('class','calendarDay');
         ul.appendChild(li);
     }
 }
@@ -160,4 +161,14 @@ $("#next").on("click", function () {
         renderCalendar(currMonth + 1, currYear);
 
 
+});
+
+// Event listener for options 
+var optiondiv = document.querySelector("#options");
+
+$("body").on("click", function(e){
+    if(e.target.className == 'calendarDay')
+        optiondiv.style.display = 'block';
+    else
+        optiondiv.style.display = 'none';
 });

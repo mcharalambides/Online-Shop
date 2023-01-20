@@ -13,14 +13,25 @@
 
   /* Add this to your style.css file */
 header {
-    position: fixed;
     width: 100%;
+    height: 100vh; /* Make the banner height equal to the full screen height */
     z-index: 1;
+
+        /* The image used */
+        background-image: url("image1.jpg");
+  
+        /* Set a specific height */
+        min-height: 500px;
+      
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
   }
   
   #image-banner img {
     width: 100%;
-    height: 100vh; /* Make the banner height equal to the full screen height */
     position: relative;
     object-fit: cover;
     z-index: 0;
@@ -56,7 +67,7 @@ header {
     width: 550px;
     border-radius: 10px;
     background: #fff;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     margin-top: 40px;
   }
   .wrapper .wrapper_header{
@@ -155,18 +166,12 @@ header {
     padding: .375rem .75rem;
 }
 
-.parallax {
-    /* The image used */
-    background-image: url("image1.jpg");
-  
-    /* Set a specific height */
-    min-height: 500px;
-  
-    /* Create the parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+   #options {
+    width: 550px;
+    height: 250px;
+    border-radius: 10px;
+    background:#fff;
+    margin-bottom: 20px;
   }
 
   #checkoutBtn {
@@ -179,5 +184,29 @@ header {
     flex-direction: column;
     display: flex;
     align-items: center;
-    padding-bottom: 30px;
   }
+
+  .row1{
+    font-weight: 500;
+    margin: 7px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+
+  }
+  .row2{
+    font-weight: 500;
+    margin: 7px;
+    height: 180px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+  }
+
+  .border{
+    border: 3.5px solid #dee2e6!important
+  }
+
+  
