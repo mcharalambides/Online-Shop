@@ -168,7 +168,7 @@ var optiondiv = document.querySelector("#options");
 
 $("body").on("click", function(e){
     if(e.target.className == 'calendarDay')
-        optiondiv.style.display = 'block';
-    else
-        optiondiv.style.display = 'none';
+        optiondiv.classList.add("show");
+    else if(!optiondiv.contains(e.target))
+        optiondiv.classList.remove("show");
 });

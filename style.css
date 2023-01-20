@@ -168,10 +168,21 @@ header {
 
    #options {
     width: 550px;
-    height: 250px;
+    height: 1px;
     border-radius: 10px;
     background:#fff;
     margin-bottom: 20px;
+  }
+
+  #options {
+    opacity: 0;
+    height: 1px;
+    transition: all .75s ease;
+  }
+  
+   #options.show {
+    opacity: 1;
+    height: 250px;
   }
 
   #checkoutBtn {
