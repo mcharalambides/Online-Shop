@@ -1,0 +1,77 @@
+#checkoutInfo {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    border: 1.5px solid #a3a4a5!important;
+    overflow: auto;
+    position: relative;
+    height: 100%;
+    min-height: 100% !important;
+    width: 80vh;
+    
+    /* display: grid;
+    grid-gap: 60px;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around; */
+    display: block;
+    border-top-left-radius: 27px;
+    border-top-right-radius: 27px;
+    background: #ffffff;
+    box-shadow:  5px 5px 14px #929191,
+                5px 5px 14px #ffffff;
+}
+
+h1 {
+    margin: 2%;
+    font-size: 1.5rem;
+    /* top:50%;
+    position: relative;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-200%); */
+}
+
+h4{
+    font-size: 1rem;
+}
+
+.cost{
+    display: flex;
+    justify-content: center;
+    border-radius: 27px;
+    border: 3.5px solid #dee2e6!important
+}
+
+.hiddenElement{
+    height: 0px;
+    transition: all .35s ease;
+    overflow: hidden;
+    background-color: gainsboro;
+}
+
+.clickable{
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
+    cursor: pointer;
+}
+
+.clickable:active {
+    /* Push the button downwards when pressed */
+   transform: translateY(0);
+  }
+
+  #dateSelectedCollapse{
+    display: grid;
+    grid-gap: 0px;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-around;
+    align-content: space-around;
+  }
+
+  .form-control{
+    width: 99%;
+  }
+
+  input[type=checkbox]{
+    width: auto;
+    margin-right: 230px;
+  }
+

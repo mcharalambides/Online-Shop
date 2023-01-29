@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Online Shop</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/checkoutStyle.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+</head>
+<body>
+  <my-header></my-header>
+  <div class="column1">
+    <div id="checkoutInfo">
+        <div id="personlInfo" class="clickable"><h1>Date Selected and Cost</h1></div>
+        <div id="personlInfoCollapse" class="hiddenElement"><h1 class="">The date you selected is: {{data[0] + '/' + data[1] + '/' + data[2]}}</h1></div>
+      </div>
+      <div id="checkoutInfo">
+        <div class="column1"></div>
+          <div id="dateSelected" class="clickable"><h1>Personal Information</h1></div>
+          <div id="dateSelectedCollapse" class="hiddenElement">
+            <input type="text" class="form-control" name="firstName" placeholder="First Name" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input type="text" class="form-control" name="lastName" placeholder="Last Name" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input type="email" class="form-control" name="email" placeholder="Email" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <!-- <div style="background-color: gainsboro;" class="form-control"></div> -->
+            <h4>Birthday</h4>
+            <h4>Ethnicity</h4>
+            <h4>Place of Residence</h4>
+            <input type="tel" class="form-control" name="telephone" placeholder="Telephone" required="required" id="telephone" minlength="8" fdprocessedid="s44qxv">
+            <input type="date" class="form-control" name="birthday" value="2018-07-22" min="2018-01-01" max="2018-12-31" id="start">
+            <select class="form-control" id="countries" name="countries"></select>
+            <h4>Driving License</h4>
+            <input type="checkbox"  name="license" placeholder="Telephone"  id="license" fdprocessedid="s44qxv">
+          </div>
+        </div>
+      <!-- <div class="cost"><h1 class="">Cost</h1></div> -->
+      <div>
+        <a class="btn btn-outline-success">Buy Now</a>
+      </div>
+    </div>
+  </div>
+  <my-footer></my-footer>
+
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>    
+  <script src="elements.js"></script>
+  <script src="checkoutScript.js"></script>
+</body>
+</html>
