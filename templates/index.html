@@ -10,6 +10,13 @@
 
 </head>
 <body>
+  {% with messages = get_flashed_messages() %}  
+  {% if messages %}  
+        {% for message in messages %}  
+             <p>{{ message }}</p>  
+        {% endfor %}  
+  {% endif %}  
+{% endwith %}  
 
 <my-header></my-header>
 
@@ -19,48 +26,55 @@
         <!-- style="display:flex; justify-content:center; align-items: center; margin-top: 30px;" -->
 
         <div class = "column1">
-          <div><h1>{{data}}</h1></div>
           <div class="image_row">
-            <div class="btn btn-outline-success container1"><img src="../static/2T_enduro_ride.JPG" alt="2T Enduro Ride"><h2 class="centered">2T Enduro Ride</h2></div>
-            <div class="btn btn-outline-success container1"><img src="../static//easy_enduro_ride.JPG" alt="Easy Enduro Ride"><h2 class="centered">Easy Enduro Ride</h2></div>
-            <div class="btn btn-outline-success container1"><img src="../static/First_timers_.JPG" alt="First Timers"><h2 class="centered">First Timers</h2></div>
+            <div id = "EE" class="btn btn-outline-success container1 ride"><img src="../static//easy_enduro_ride.JPG" alt="Easy Enduro Ride"><h2 class="centered">Easy Enduro Ride</h2></div>
+            <div id = "FT" class="btn btn-outline-success container1 ride"><img src="../static/First_timers_.JPG" alt="First Timers"><h2 class="centered">First Timers</h2></div>
+            <div ID = "2T" class="btn btn-outline-success container1 ride"><img src="../static/2T_enduro_ride.JPG" alt="2T Enduro Ride"><h2 class="centered">2T Enduro Ride</h2></div>
           </div>
-          <div class="shadow p-3 mb-2 bg-white rounded-50 wrapper">
-            <div class="wrapper_header">
-                <p class="current-date"></p>
-                <div class="icons">
-                    <span id="prev" class="material-symbols-outlined">chevron_left</span>
-                    <span id="next" class="material-symbols-outlined">chevron_right</span>
-                </div>
-            </div>
-        <div class="calendar">
-            <ul class="weeks">
-                <li>Sun</li>
-                <li>Mon</li>
-                <li>Tue</li>
-                <li>Wed</li>
-                <li>Thu</li>
-                <li>Fri</li>
-                <li>Sat</li>
-            </ul>
-            <ul class="days"></ul>
-
-        </div>
-        </div>
-
+            <div id="collapsedCalendar" class="shadow p-3 mb-2 bg-white rounded-50 wrapper">
+              <div class="wrapper_header">
+                  <p class="current-date"></p>
+                  <div class="icons">
+                      <span id="prev" class="material-symbols-outlined">chevron_left</span>
+                      <span id="next" class="material-symbols-outlined">chevron_right</span>
+                  </div>
+              </div>
+          <div class="calendar">
+              <ul class="weeks">
+                  <li>Sun</li>
+                  <li>Mon</li>
+                  <li>Tue</li>
+                  <li>Wed</li>
+                  <li>Thu</li>
+                  <li>Fri</li>
+                  <li>Sat</li>
+              </ul>
+              <ul class="days"></ul>
+  
+          </div>
+          </div>
+        
         <div class="shadow" id="options">
-          <div class="border border-5 row1">
+          <div class="border border-5 row2">
             <div class="column1"><p>Time</p></div>
             <div class="column1"><p>Number of People</p></div>
-          </div>
-          <div class="border border-5 row2">
-            <div class="column1"><select></select></div>
-            <div class="column1"><select>Number of People</select></div>
-          </div>
-        </div>
+            <div class="column1">
+              <select class="my-select-menu" id="availableTimeSlots"></select>
+            </div>
+            <div class="column1">
+              <select class="my-select-menu" id="numOfPeople">
+                {% for i in range(1,6) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
 
-        <div class="disabled btn" id = "checkoutBtn">Check out
+              </select>
+            </div>
+          </div>
+            <div style="margin-top:45px;" class="column1">
+              <h3 id="rideHeader">Your choice is:</h3>
+            </div>
         </div>
+        <div class="disabled btn" id = "checkoutBtn">Check out</div>
         
         </div>
     </main>

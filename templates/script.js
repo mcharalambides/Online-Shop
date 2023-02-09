@@ -6,6 +6,7 @@ const months = {
     "1": "January", "2": "February", "3": "March", "4": "April", "5": "May", "6": "June", "7": "July",
     "8": "August", "9": "September", "10": 'October', "11": "November", "12": "December"
   };
+const rides = {'EE' : 'Easy Enduro', 'FT': 'First Timers', '2T': '2T Enduro'};
   
 // const week = { "1": "Sun", "2": "Mon", "3": "Tue", "4": "Wed", "5": "Thu", "6": "Fri", "7": "Sat" };
 
@@ -98,7 +99,7 @@ function renderCalendar(month,year){
         li.innerHTML = i;
         
         var diff = days_between(new Date(currYear, currMonth - 1, i));
-        if((diff > 21) || (diff < 1))
+        if((diff > 21) || (diff < 0))
             dayActivation = "inactive";
         else 
             dayActivation = "active";
@@ -149,6 +150,10 @@ function setCheckoutBtn(){
     checkOutButton.className = '';
     var redirectElemnt = document.createElement("a");
     redirectElemnt.setAttribute('href', 'checkout.html?day=' + day_to_send + '&month=' + month_to_send + '&year=' + year_to_send );
+    redirectElemnt.addEventListener("click", function(event){
+        event.preventDefault();
+        clickedOnAnchor();
+    });
     redirectElemnt.innerText = "Check out";
     redirectElemnt.classList.add("btn","btn-outline-success");
     checkOutButton.appendChild(redirectElemnt);
@@ -167,7 +172,11 @@ $("body").on("click", function(e){
         //Add selected date to template
         day_to_send = e.target.id;
         month_to_send = document.querySelector(".current-date").innerText.split(" ")[0];
+        month_to_send_number = document.querySelector(".current-date").id;
         year_to_send = document.querySelector(".current-date").innerText.split(" ")[1];
+
+        const day_of_week_to_send = new Date(year_to_send, month_to_send_number, day_to_send).getDay();
+        getDays(day_of_week_to_send);
 
         // Calendar check selected day
         if(selectedDay != null && selectedDay != e.target)
@@ -178,6 +187,7 @@ $("body").on("click", function(e){
         selectedDay = e.target; //Save the new selected day 
         e.target.classList.add("clickedDays");
         optiondiv.classList.add("show");
+        document.getElementById("rideHeader").innerHTML = "Your choice is: " + rides[chosenRide];
         setCheckoutBtn();
     }
     else if(!optiondiv.contains(e.target)){
@@ -185,3 +195,63 @@ $("body").on("click", function(e){
         optiondiv.classList.remove("show");
     }
 });
+
+/*Funciton to toggle the calendar and checkout button upon clicking
+on a ride option*/
+var chosenRide
+$(".ride").on("click", function(e){
+    chosenRide = this.id;
+    const calendar = document.querySelector("#collapsedCalendar");
+    const checkoutBtn = document.querySelector("#checkoutBtn");
+
+    if(calendar.style.opacity == 0){
+        calendar.style.opacity = "1";
+        checkoutBtn.style.opacity = "1";
+        calendar.style.height = "630px";
+        checkoutBtn.style.height = "40px";
+    }
+    else{
+        calendar.style.opacity = "0";
+        checkoutBtn.style.opacity = "0";
+        calendar.style.height = "0px";
+        checkoutBtn.style.height = "0px";
+    }
+});
+
+/*Converting into a POST method and setting the required fields*/
+function clickedOnAnchor(){
+    
+
+    //  $.post("/checkout", { 'day': day_to_send, 'month': month_to_send, "year":year_to_send, 'ride':chosenRide }, function (data) {
+    //     document.write(data);
+    //  });
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/checkout", true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+            window.location.href = '/checkoutComplete';
+        }
+    }
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ 'day': day_to_send, 'month': month_to_send_number, 'year':year_to_send, 'ride':chosenRide, 
+    'time':$("#availableTimeSlots").val(), 'people': $("#numOfPeople").val() }));
+
+};
+
+//Funciton to get available time slots when click on day on the calendar
+function getDays(day_of_week_to_send){
+    $.post("/getDays", { 'day': day_of_week_to_send, 'ride':chosenRide }, function (result) {
+        const selectTag = document.getElementById("availableTimeSlots");
+        $("#availableTimeSlots").empty();
+
+        result.map((item) =>{
+            let opt = document.createElement("option");
+            opt.value = item;
+            opt.innerHTML = item;
+            selectTag.append(opt);
+        })
+    }).fail(function(data) {
+        console.log(data);
+      });
+
+}

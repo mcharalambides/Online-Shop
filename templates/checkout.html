@@ -15,7 +15,11 @@
   <div class="column1">
     <div id="checkoutInfo">
         <div id="personlInfo" class="clickable"><h1>Date Selected and Cost</h1></div>
-        <div id="personlInfoCollapse" class="hiddenElement"><h1 class="">The date you selected is: {{data[0] + '/' + data[1] + '/' + data[2]}}</h1></div>
+        <div id="personlInfoCollapse" class="hiddenElement">
+          <h1 class="">The date you selected is: {{session['day'] + '/' + session['month'] + '/' + session['year'] + ' at ' + session['time']}}</h1>
+          <h1 class="">Number of People: {{session['people']}}</h1>
+          <h1 class="">The ride you chose is : {{session['ride']}}</h1>
+        </div>
       </div>
       <div id="checkoutInfo">
         <div class="column1"></div>

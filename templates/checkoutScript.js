@@ -7,7 +7,7 @@ $("#personlInfo").on("click", function(e){
         personalInfoFlag = false;
     }
     else{
-        dateSelected.style.height = "15vh";
+        dateSelected.style.height = "200px";
         personalInfoFlag = true;
     }
 
@@ -23,7 +23,7 @@ $("#dateSelected").on("click", function(e){
         personalInfoFlag = false;
     }
     else{
-        dateSelected.style.height = "15vh";
+        dateSelected.style.height = "200px";
         dateSelected.style.padding = "5px";
         personalInfoFlag = true;
     }

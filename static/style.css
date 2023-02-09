@@ -98,6 +98,9 @@ header {
     border-radius: 10px;
     background: #fff;
     margin-bottom: 20px;
+    transition: all .55s ease;
+    opacity: 0;
+    height: 0px;
   }
   .wrapper .wrapper_header{
     display: flex;
@@ -225,7 +228,7 @@ header {
 
   #options {
     opacity: 0;
-    height: 1px;
+    height: 0px;
     transition: all .55s ease;
   }
   
@@ -252,7 +255,8 @@ header {
   .row2{
     font-weight: 500;
     margin: 7px;
-    height: 180px;
+    margin-top: 10px;
+    height: 90px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content: space-around;
@@ -270,6 +274,9 @@ header {
     border-radius: 20px;
     border: 1px solid transparent;
     box-shadow: 3px 3px 2px 0 rgb(0 0 0 / 15%)
+  }
+  .btn:visited{
+    background-color: #28a745;
   }
 
   #loginBtn{
@@ -294,6 +301,24 @@ header {
     cursor: auto;
     background-color: #63805d;
   }
+
+  #checkoutBtn{
+    opacity: 0;
+    height: 0px;
+    transition: all .55s ease;
+  }
+
+  .my-select-menu {
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  /* .my-select-menu::part(listbox) {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #1d7d07;
+    border-radius: 5px;
+  } */
 
   @media only screen and (max-width: 768px){
     h2{
