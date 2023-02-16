@@ -25,16 +25,36 @@
         <div class="column1"></div>
           <div id="dateSelected" class="clickable"><h1>Personal Information</h1></div>
           <div id="dateSelectedCollapse" class="hiddenElement">
+            {% if session['firstName'] %}
+            <input type="text" class="form-control" name="firstName" value = "{{session['firstName']}}" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            {% else %}
             <input type="text" class="form-control" name="firstName" placeholder="First Name" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            {% endif %}
+
+            {% if session['lastName'] %}
+            <input type="text" class="form-control" name="lastName" value = "{{session['lastName']}}" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            {% else %}
             <input type="text" class="form-control" name="lastName" placeholder="Last Name" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            {% endif %}
+
+            {% if session['email'] %}
+            <input type="email" class="form-control" name="email" placeholder="{{session['email']}}" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            {% else %}
             <input type="email" class="form-control" name="email" placeholder="Email" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            {% endif %}
+
             <!-- <div style="background-color: gainsboro;" class="form-control"></div> -->
-            <h4>Birthday</h4>
+            <!-- <h4>Birthday</h4>
             <h4>Ethnicity</h4>
-            <h4>Place of Residence</h4>
+            <h4>Place of Residence</h4> -->
             <input type="tel" class="form-control" name="telephone" placeholder="Telephone" required="required" id="telephone" minlength="8" fdprocessedid="s44qxv">
             <input type="date" class="form-control" name="birthday" value="2018-07-22" min="2018-01-01" max="2018-12-31" id="start">
-            <select class="form-control" id="countries" name="countries"></select>
+            <select class="form-control" id="countries" name="countries">
+              <option value="" disabled selected hidden>Ethnicity</option>
+            </select>
+            <select class="form-control" id="countries" name="countries">
+              <option value="" disabled selected hidden>Place of Residence</option>
+            </select>
             <h4>Driving License</h4>
             <input type="checkbox"  name="license" placeholder="Telephone"  id="license" fdprocessedid="s44qxv">
           </div>

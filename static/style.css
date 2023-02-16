@@ -279,11 +279,15 @@ header {
     background-color: #28a745;
   }
 
-  #loginBtn{
+  #loginBtn, #logoutBtn{
     background-color: cornflowerblue;
   }
 
   #loginBtn:hover{
+    border-color: aqua;
+    background-color: aqua;
+  }
+  #logoutBtn:hover{
     border-color: aqua;
     background-color: aqua;
   }

@@ -9,6 +9,8 @@ import numpy
 import mysql.connector
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
+from datetime import timedelta
+
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
 app = Flask(__name__)
@@ -20,6 +22,7 @@ app.config.from_object(__name__)
 db = SQLAlchemy(app)
 
 app.config['SESSION_SQLALCHEMY'] = db
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
 
 sess = Session(app)
 
@@ -133,6 +136,13 @@ def loginRequest():
     session['user'] = username 
     return redirect(url_for("hello_world"))
 
+@app.route('/logoutUser')
+def logoutRequest():
+    session.clear()
+
+    return redirect(url_for("hello_world"))
+
+
 @app.route('/registerForm.css')
 def registerStyling():
     return render_template("static/registerForm.css")
@@ -213,6 +223,20 @@ def checkoutComplete():
 
     if not set(['day','month','year','ride','time','people']).issubset(set(session.keys())):
         return redirect(url_for("hello_world"))
+
+    
+    if "user" in session.keys():
+        # GET DATA FOR USER IF LOGGED IN
+        mycursor = mydb.cursor()
+        mycursor.execute(f"SELECT * FROM Users WHERE username ='{session['user']}'")
+        myresult =  mycursor.fetchall()
+        myresult = list(myresult[0])
+        firstName = myresult[4]
+        lastName = myresult[5]
+        email = myresult[3]
+        session['firstName'] = firstName
+        session['lastName'] = lastName
+        session['email'] = email
     
     # data = request.get_json();
     # day = request.form.get("day")
@@ -220,7 +244,7 @@ def checkoutComplete():
     # year = request.form.get("year")
     # ride = request.form.get("ride")
     
-    #check if every field in checkoudata is sey and correct
+    #check if every field in checkoudata is set and correct
 
     return render_template("checkout.html")
 
