@@ -3,7 +3,7 @@
   html, body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 168vh;
     background-color: #f2f2f2;
   }
   /* flex-grow property makes the main content takes remaining space */
@@ -14,14 +14,14 @@
   /* Add this to your style.css file */
 header {
     width: 100%;
-    height: 60vh; /* Make the banner height equal to the full screen height */
+    height: 50vh; /* Make the banner height equal to the full screen height */
     z-index: 1;
 
         /* The image used */
         background-image: url('../static/image1_Copy.jpg');
   
         /* Set a specific height */
-        min-height: 500px;
+        /* min-height: 500px; */
       
         /* Create the parallax scrolling effect */
         background-attachment: fixed;
@@ -325,8 +325,16 @@ header {
   } */
 
   @media only screen and (max-width: 768px){
+    header{
+      height: 40vh;
+      min-height: 0;
+    }
     h2{
       font-size: 3.2vw;
+    }
+
+    #rideHeader{
+      font-size: 1rem;
     }
 
     .wrapper{
@@ -372,6 +380,20 @@ header {
     .calendar .days li{
       width: 7vw;
       font-size: 15px;
+    }
+
+    /* Styling for navbar */
+    .navbar{
+      padding-top: 0px;
+      font-size: 18px;
+    }
+    .logo-image{
+      width: 120px;
+      height: 120px;
+    }
+
+    .navbarButton{
+      
     }
 
 

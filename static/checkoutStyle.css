@@ -1,3 +1,6 @@
+html,body{
+  min-height: 100vh;
+}
 #checkoutInfo {
     margin-top: 2%;
     margin-bottom: 2%;
@@ -6,7 +9,7 @@
     position: relative;
     height: 100%;
     min-height: 100% !important;
-    width: 40vw;
+    width: 60vw;
     
     /* display: grid;
     grid-gap: 60px;
@@ -73,5 +76,24 @@ h4{
   input[type=checkbox]{
     width: auto;
     margin-right: 230px;
+  }
+
+  @media only screen and (max-width: 768px){
+    h1{
+      font-size: 0.8rem;
+    }
+    #checkoutInfo{
+      width: 70vw;
+    }
+
+    #personlInfo,#dateSelected{
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+    #dateSelectedCollapse{
+      grid-gap: 5px;
+      grid-template-columns: 1fr;
+    }
   }
 

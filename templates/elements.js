@@ -35,10 +35,11 @@ class MyHeader extends HTMLElement {
                 <li class="nav-item">
                   <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">First Timers</a>
                 </li>
-              </ul>
-              <div style="padding-left:60px;">
-                <button class="btn btn-outline-success" type="submit">BOOK NOW</button>
-              </div>
+              </ul>` + 
+            //   <div style="padding-left:60px;">
+            //     <button class="btn btn-outline-success" type="submit">BOOK NOW</button>
+            //   </div> 
+			`
               {% if not session['user'] %}
               <div style="padding-left:60px;">
               <a id="loginBtn" class="btn btn-outline-success" href="login.html">LOGIN</a>
