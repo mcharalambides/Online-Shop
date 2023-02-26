@@ -24,7 +24,11 @@
   <div id="image-banner" class="parallax image-banner"></div>
   <main>
         <!-- style="display:flex; justify-content:center; align-items: center; margin-top: 30px;" -->
-
+        <div class="column1">
+          {% if session['user'] %}
+          <h1 id="welcomeMsg"> Welcome {{session['user']}}</h1>
+          {% endif %}
+        </div>
         <div class = "column1">
           <div class="image_row">
             <div id = "EE" class="btn btn-outline-success container1 ride"><img src="../static//easy_enduro_ride.JPG" alt="Easy Enduro Ride"><h2 class="centered">Easy Enduro Ride</h2></div>

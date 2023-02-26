@@ -16,53 +16,69 @@
     <div id="checkoutInfo">
         <div id="personlInfo" class="clickable"><h1>Date Selected and Cost</h1></div>
         <div id="personlInfoCollapse" class="hiddenElement">
+        <div class="innerInfo">
           <h1 class="">The date you selected is: {{session['day'] + '/' + session['month'] + '/' + session['year'] + ' at ' + session['time']}}</h1>
           <h1 class="">Number of People: {{session['people']}}</h1>
           <h1 class="">The ride you chose is : {{session['ride']}}</h1>
+        </div>
+          <h1 class="">The Final Cost is : {{session['price']}}€</h1>
         </div>
       </div>
       <div id="checkoutInfo">
         <div class="column1"></div>
           <div id="dateSelected" class="clickable"><h1>Personal Information</h1></div>
+          <form id="submitOrder" action="/submitOrder" method="POST">
           <div id="dateSelectedCollapse" class="hiddenElement">
             {% if session['firstName'] %}
-            <input type="text" class="form-control" name="firstName" value = "{{session['firstName']}}" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input required type="text" class="form-control" name="firstName" value = "{{session['firstName']}}" required="required" id="firstName" minlength="5">
             {% else %}
-            <input type="text" class="form-control" name="firstName" placeholder="First Name" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input required type="text" class="form-control" name="firstName" placeholder="First Name" required="required" id="firstName" minlength="5">
             {% endif %}
 
             {% if session['lastName'] %}
-            <input type="text" class="form-control" name="lastName" value = "{{session['lastName']}}" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input required type="text" class="form-control" name="lastName" value = "{{session['lastName']}}" required="required" id="lastName" minlength="5">
             {% else %}
-            <input type="text" class="form-control" name="lastName" placeholder="Last Name" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input required type="text" class="form-control" name="lastName" placeholder="Last Name" required="required" id="lastName" minlength="5">
             {% endif %}
 
             {% if session['email'] %}
-            <input type="email" class="form-control" name="email" placeholder="{{session['email']}}" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input required type="email" class="form-control" name="email" value="{{session['email']}}" required="required" id="email" minlength="5">
             {% else %}
-            <input type="email" class="form-control" name="email" placeholder="Email" required="required" id="username" minlength="5" fdprocessedid="s44qxv">
+            <input required type="email" class="form-control" name="email" placeholder="Email" required="required" id="email" minlength="5">
             {% endif %}
 
             <!-- <div style="background-color: gainsboro;" class="form-control"></div> -->
             <!-- <h4>Birthday</h4>
             <h4>Ethnicity</h4>
             <h4>Place of Residence</h4> -->
-            <input type="tel" class="form-control" name="telephone" placeholder="Telephone" required="required" id="telephone" minlength="8" fdprocessedid="s44qxv">
-            <input type="date" class="form-control" name="birthday" value="2018-07-22" min="2018-01-01" max="2018-12-31" id="start">
-            <select class="form-control" id="countries" name="countries">
+            {% if session['telephone'] %}
+            <input required type="tel" class="form-control" name="telephone" value="{{session['telephone']}}" required="required" id="telephone" minlength="8">
+            {% else %}
+            <input required type="tel" class="form-control" name="telephone" placeholder="Telephone" required="required" id="telephone" minlength="8">
+            {% endif %}
+            <select required form="submitOrder" class="form-control" id="ethnicity" name="ethnicity">
               <option value="" disabled selected hidden>Ethnicity</option>
             </select>
-            <select class="form-control" id="countries" name="countries">
+            <select required form="submitOrder" class="form-control" id="residence" name="residence">
               <option value="" disabled selected hidden>Place of Residence</option>
             </select>
-            <h4>Driving License</h4>
-            <input type="checkbox"  name="license" placeholder="Telephone"  id="license" fdprocessedid="s44qxv">
+            <div class="column_new">
+              <div class="row_new">            
+                <h4>Date of Birth</h4>
+                <input required type="date" class="form-control" name="birthday" value="2018-07-22" min="2018-01-01" max="2018-12-31" id="birthday">
+              </div>
+              <div class="row_new">
+                <h4>Driving License</h4>
+                <input type="checkbox"  name="license"  id="license" fdprocessedid="s44qxv">
+              </div>
+            </div>
           </div>
         </div>
       <!-- <div class="cost"><h1 class="">Cost</h1></div> -->
-      <div>
-        <a class="btn btn-outline-success">Buy Now</a>
+      <div style="padding-bottom:10px;">
+        <button type="submit" class="btn btn-outline-success">Buy Now</a>
       </div>
+    </form>
     </div>
   </div>
   <my-footer></my-footer>

@@ -49,7 +49,7 @@ function days_between(date1) {
     const differenceMs = date1 - date2;
 
     // Convert back to days and return
-    return Math.round(differenceMs / ONE_DAY);
+    return Math.ceil(differenceMs / ONE_DAY);
 
 }
 function renderCalendar(month,year){
@@ -99,7 +99,7 @@ function renderCalendar(month,year){
         li.innerHTML = i;
         
         var diff = days_between(new Date(currYear, currMonth - 1, i));
-        if((diff > 21) || (diff < 0))
+        if((diff > 21) || (diff <= 0))
             dayActivation = "inactive";
         else 
             dayActivation = "active";
@@ -166,6 +166,7 @@ function resetCheckoutBtn(){
     checkOutButton.innerText = 'Check out';
 }
 
+var day_of_week_to_send;
 $("body").on("click", function(e){
     if(e.target.classList.contains('calendarDay') && e.target.classList.contains('active')){
         
@@ -175,7 +176,7 @@ $("body").on("click", function(e){
         month_to_send_number = document.querySelector(".current-date").id;
         year_to_send = document.querySelector(".current-date").innerText.split(" ")[1];
 
-        const day_of_week_to_send = new Date(year_to_send, month_to_send_number, day_to_send).getDay();
+        day_of_week_to_send = new Date(year_to_send, parseInt(month_to_send_number) - 1, day_to_send).getDay();
         getDays(day_of_week_to_send);
 
         // Calendar check selected day
@@ -233,7 +234,7 @@ function clickedOnAnchor(){
         }
     }
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({ 'day': day_to_send, 'month': month_to_send_number, 'year':year_to_send, 'ride':chosenRide, 
+    xhr.send(JSON.stringify({ 'day': day_to_send, 'weekDay':day_of_week_to_send, 'month':  month_to_send_number, 'year':year_to_send, 'ride':chosenRide, 
     'time':$("#availableTimeSlots").val(), 'people': $("#numOfPeople").val() }));
 
 };

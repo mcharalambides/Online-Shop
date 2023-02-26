@@ -1,0 +1,5 @@
+id,UserOrdered,Ride,Date Of Order,Date to Ride,Time,Number of People,FirstName,LastName,email,telephone,Ethnicity,Residence,Date Of Birth,Driving License
+1,MariosCh2,2T Enduro,2023-02-25 07:17:51,2023-03-01,14:00-15:00,2,Marios,Charalambides,marios-1996@windowslive.com,+35799757826,Azerbaijan,Anguilla,2023-02-25,YES
+2,MariosCh2,First Timers,2023-02-25 07:27:08,2023-03-18,14:00-15:00,2,Giwrgos,Gewrgiou,marios-1996@windowslive.com,+35799757826,American Samoa,Belarus,1996-06-19,NO
+3,Andreas1,2T Enduro,2023-02-25 07:29:21,2023-03-18,14:00-15:00,5,Andreas,Charalambous,marios-1995@windowslive.com,4395734053,Cyprus,Cyprus,2023-02-14,YES
+4,Guest,First Timers,2023-02-25 07:51:08,2023-02-28,14:00-15:00,1,afdfsdf,dsfsdf,dfsdf@dsfdsf,dfdsfsdf,Bahrain,Azerbaijan,2023-02-25,NO

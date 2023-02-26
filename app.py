@@ -1,22 +1,46 @@
+from calendar import month
 from concurrent.futures import thread
-from os import times_result
-from time import time
-import traceback
+from html.entities import html5
+# from crypt import methods
+import os
 import sys
 import logging
-from flask import Flask,flash, render_template,send_file,flash,request,redirect,url_for, session, Response
-import numpy
+from flask import Flask,flash, render_template,send_file,request,redirect,url_for, session, Response
+import pandas as pd
 import mysql.connector
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from datetime import timedelta
+from countries import available_countries
+from datetime import datetime
+from dotenv import load_dotenv
+import pdfkit
 
-
+pdfConfig = pdfkit.configuration(wkhtmltopdf='wkhtmltopdf/bin/wkhtmltopdf.exe')
+load_dotenv()
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
 app = Flask(__name__)
-app.config['SECRET KEY'] = 'myscretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/OnlineShop'
-app.config['SESSION_TYPE'] = 'sqlalchemy'
+app.config['SECRET KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SESSION_TYPE'] = os.getenv('SESSION_TYPE')
 
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
@@ -30,17 +54,22 @@ with app.app_context():
     db.create_all()
 
 #DATABASE CONNECTION
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="root",
-  database ="OnlineShop"
-)
+try:
+    mydb = mysql.connector.connect(
+    host= os.getenv("MYSQL_HOST"),
+    user= os.getenv("MYSQL_USER"),
+    password= os.getenv("MYSQL_PASS"),
+    database = os.getenv("MYSQL_DB")
+    )
+except Exception as e:
+    print(str(e))
 
+import views
 #AVAILABLE RIDES
 rides = {'EE' : 'Easy Enduro', 'FT': 'First Timers', '2T': '2T Enduro'}
+price = {'Easy Enduro' : 60, 'First Timers': 70, '2T Enduro': 120}
 
-def time_slots(day,ride):
+def time_slots(day, ride):
     new_time_slots = ['9:00-11:00','11:00-12:00','14:00-15:00','15:00-17:00']
 
     #Because javascript numbers week days from index=0
@@ -83,14 +112,41 @@ def time_slots(day,ride):
             new_time_slots.remove('9:00-11:00')
         if ride == '2T':
             new_time_slots.remove('11:00-12:00')
+
+    # Check for availabiity
+    """An exeis ta dedomena stin mnimi tote yparxei kindinos na ginei kapoio transaction
+     kai na min exoun enimerwthei ta dedomena kai na proxwriseis me to transaction pou den prepei 
+     na ginei. Otan ginei ena succesful transaction tote enimerwse to DataStructure pou xrisimopoieies"""
+    # mycursor = mydb.cursor()
+    # myTable = pd.read_sql('select * from orders',mydb)
+    # print(len(myTable.loc[ myTable['Time'] == '9:00-11:00']))
+    # for time in new_time_slots:
+    #     mycursor.execute(f"SELECT * FROM Orders WHERE Time ='{time}'")
+    #     myresult =  mycursor.fetchall()
+    # mycursor.close()
+    # myresult = list(myresult[0])
     return new_time_slots
+
+
+def check_time_clots():
+    pass
+def check_availability():
+    pass
 
 @app.route('/')
 def hello_world():
-    if 'user' in session.keys():
-        return render_template("index.html", data = session['user'])
-    else:
-        return render_template("index.html")
+    # if 'user' in session.keys():
+    #     return render_template("index.html", data = session['user'])
+    # else:
+    #     return render_template("index.html")
+    #POP KEYS DAY DAYOFWEEK MONTH RIDE ETC FROM SESSION DIC IF THEY EXIST
+    
+    # if 'user' in session:
+    #     for key in list(session.keys()):
+    #         if key != '_permanent':
+    #             del session[key]
+         
+    return render_template("index.html")
 
 
 @app.route('/getDays', methods = ["POST"])
@@ -107,6 +163,9 @@ def getDays():
     #Check that the ride is one of the options
     ride = request.form.get("ride")
 
+    if ride not in rides:
+        return Response(status=500)
+    
     return time_slots(day,ride)
 
 @app.route('/style.css')
@@ -130,16 +189,33 @@ def loginRequest():
 
     mycursor.execute(f"SELECT * FROM Users WHERE username ='{username}' and password = '{password}'")
     myresult = mycursor.fetchall()
-    if len(myresult) != 1:
-        return redirect(url_for("loginPage"))
+    if len(myresult) == 1:
+        # session.clear()
+        session['user'] = username
+        mycursor.close()
+        if 'admin' in session:
+            del session['admin']
+        return redirect(url_for("hello_world"))
 
-    session['user'] = username 
-    return redirect(url_for("hello_world"))
+    # CHECK IF THE USER EXISTS IS AN ADMIN
+    mycursor.execute(f"SELECT * FROM Admin WHERE username ='{username}' and password = '{password}'")
+    myresult = mycursor.fetchall()
+    if len(myresult) == 1:
+        # session.clear()
+        session['admin'] = True
+        session['page'] = 1
+        # session['expiry'] = datetime.datetime.strptime(datetime.today(), "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=1)
+        mycursor.close()
+        return redirect(url_for("admin"))
+
+    #CHECK IF THE USER IS ALREADY LOGGED IN FROM SESSIONS AND FROM FIELD IN DATABASE 
+    return redirect(url_for("loginPage"))
 
 @app.route('/logoutUser')
 def logoutRequest():
     session.clear()
-
+    # Clear session and delete connection to db AND DELETE RECORD IN SESSIONS
+    # SET FIELD IN DATABASE TO NOT LOGGED IN
     return redirect(url_for("hello_world"))
 
 
@@ -198,7 +274,7 @@ def checkoutPage():
         if not ('ride' in checkoutData.keys() and checkoutData['ride'] in rides.keys()):
             print("problem with ride") 
             return redirect(url_for("hello_world"))
-        if not ('time' in checkoutData.keys() and checkoutData['time'] in time_slots(checkoutData['day'], checkoutData['ride']) ):
+        if not ('time' in checkoutData.keys() and checkoutData['time'] in time_slots(checkoutData['weekDay'], checkoutData['ride']) ):
             print("problem with time") 
             return redirect(url_for("hello_world"))
     else:
@@ -224,19 +300,23 @@ def checkoutComplete():
     if not set(['day','month','year','ride','time','people']).issubset(set(session.keys())):
         return redirect(url_for("hello_world"))
 
-    
+    session['price'] = price[session['ride']] * int(session['people'])
     if "user" in session.keys():
         # GET DATA FOR USER IF LOGGED IN
         mycursor = mydb.cursor()
         mycursor.execute(f"SELECT * FROM Users WHERE username ='{session['user']}'")
         myresult =  mycursor.fetchall()
+        mycursor.close()
         myresult = list(myresult[0])
+        print(myresult)
         firstName = myresult[4]
         lastName = myresult[5]
         email = myresult[3]
+        telephone = myresult[6]
         session['firstName'] = firstName
         session['lastName'] = lastName
         session['email'] = email
+        session['telephone'] = telephone
     
     # data = request.get_json();
     # day = request.form.get("day")
@@ -247,6 +327,36 @@ def checkoutComplete():
     #check if every field in checkoudata is set and correct
 
     return render_template("checkout.html")
+
+@app.route('/submitOrder', methods=['POST'])
+def submitOrder():
+
+    #CHEC KFIELDS FOR VALIDITY
+    username = session.get("user", "Guest")
+    ride = session['ride']
+    dateToRide = session["year"] + "-" + session["month"] + "-" + session["day"]
+    time = session['time']
+    people = session['people']
+    firstName  = request.form['firstName']
+    lastName = request.form['lastName']
+    email = request.form['email']
+    telephone = request.form['telephone']
+    ethnicity = request.form['ethnicity']
+    residence = request.form['residence']
+    birthday = request.form['birthday']
+    driving = "YES" if 'license' in  request.form.keys() else "NO"
+
+
+    sql = "INSERT INTO orders(`UserOrdered`, `ride`, `Date to Ride`, `Time`, `Number of People`, `FirstName`, `LastName`, `email`, `telephone`, `Ethnicity`, `Residence`, `Date Of Birth`, `Driving License`) " \
+    +"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    val = (username, ride, dateToRide, time, people, firstName, lastName, email, telephone, ethnicity, residence, birthday, driving)
+    mycursor = mydb.cursor()
+    mycursor.execute(sql, val)
+    mydb.commit()
+    mycursor.close()
+
+    return redirect(url_for("hello_world"))
+
 
 @app.route('/2T_enduro_ride.jpg')
 def image1():
@@ -272,12 +382,15 @@ def registerUser():
     email = request.form['email']
     firstName = request.form['firstName']
     lastName = request.form['lastName']
+    telephone = request.form['telephone']
 
     # UPDATE DATABASE
-    sql = "INSERT INTO Users(username, password, email, FirstName, LastName) VALUES (%s, %s, %s, %s, %s)"
-    val = (username, password, email, firstName, lastName)
-    mydb.cursor().execute(sql, val)
+    sql = "INSERT INTO Users(username, password, email, FirstName, LastName, telephone) VALUES (%s, %s, %s, %s, %s, %s)"
+    val = (username, password, email, firstName, lastName, telephone)
+    mycursor = mydb.cursor()
+    mycursor.execute(sql, val)
     mydb.commit()
+    mycursor.close()
 
     # except:
     #     print("an error occured redirecting you")
@@ -287,6 +400,26 @@ def registerUser():
 
     return redirect(url_for('loginPage'))
 
+app.add_url_rule('/admin', view_func=views.admin)
+
+@app.route('/downloadPDF')
+def downloadPDF():
+    myTable = pd.read_sql('select * from orders',mydb)
+    html_string = myTable.to_html()
+    pdfkit.from_string(html_string, "orderTable.pdf", configuration=pdfConfig)
+    return send_file('orderTable.pdf', download_name='orderTable.pdf',mimetype='application/pdf')
+
+@app.route('/downloadCSV')
+def downloadCSV():
+    myTable = pd.read_sql('select * from orders',mydb)
+    myTable.to_csv('customers.csv', encoding='utf-8', index=False)
+    return send_file('customers.csv', download_name='table.csv',mimetype='text/csv')
+
+# @app.after_request
+# def after_request(response):
+#     print(response)
+#     response.headers.add("Cache-Control", "no-cache")
+#     return response
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000, threaded=True)

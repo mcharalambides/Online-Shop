@@ -26,8 +26,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `Admin` (
   `email` varchar(100) DEFAULT NULL,
-  `username` varchar(100) NOT NULL,
-  `password` varchar(50) NOT NULL
+  `username` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `password` varchar(50) COLLATE utf8mb4_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -63,11 +63,13 @@ CREATE TABLE `Arxeio` (
 
 CREATE TABLE `Users` (
   `id` INT COLLATE utf8mb4_bin auto_increment PRIMARY KEY,
-  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `FirstName` varchar(255) NOT NULL,
-  `LastName` varchar(255) NOT NULL
+  `LastName` varchar(255) NOT NULL,
+  `telephone` varchar(255) NOT NULL,
+  UNIQUE(username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -86,21 +88,29 @@ SELECT TABLE_SCHEMA AS `Database`, TABLE_NAME AS `Table`, ROUND((DATA_LENGTH + I
 select table_schema, sum((data_length+index_length)/1024/1024) AS MB from information_schema.tables group by 1;
 
 CREATE TABLE `Orders` (
-  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `UserOrdered` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `Ride` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `Date Of Order` DATETIME COLLATE utf8mb4_bin DEFAULT current_timestamp NOT NULL,
+  `id` INT auto_increment PRIMARY KEY,
+  `UserOrdered` varchar(255) NOT NULL,
+  `Ride` varchar(20) NOT NULL,
+  `Date Of Order` DATETIME DEFAULT current_timestamp NOT NULL,
   `Date to Ride` DATE NOT NULL,
   `Time` ENUM('9:00-11:00','11:00-12:00','14:00-15:00','15:00-17:00') NOT NULL,
   `Number of People` INT not null,
-   FOREIGN KEY (UserOrdered) REFERENCES Users(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  `FirstName` varchar(255) NOT NULL,
+  `LastName` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telephone` varchar(255) NOT NULL,
+  `Ethnicity` varchar(255) NOT NULL,
+  `Residence` varchar(255) NOT NULL,
+  `Date Of Birth` DATE NOT NULL,
+  `Driving License` ENUM('YES','NO') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 show tables;
-drop table Users;
+drop table orders;
 UPDATE Users
 SET id = 'randomid2'
 WHERE username = 'MariosCh2';
 
 select * from sessions;
+SELECT * FROM ADMIN where username = 'ADMIN' and password='admin';
+truncate table orders;

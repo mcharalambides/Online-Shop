@@ -243,6 +243,25 @@ header {
     align-items: center;
   }
 
+  .column_new{
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .row_new{
+    font-weight: 500;
+    margin: 7px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+    justify-items: stretch;
+    align-items: baseline;
+    justify-content: space-evenly;
+    align-content: center;
+  }
+
   .row1{
     font-weight: 500;
     margin: 7px;
@@ -323,14 +342,19 @@ header {
     border: 1px solid #1d7d07;
     border-radius: 5px;
   } */
+  
 
-  @media only screen and (max-width: 768px){
+  @media only screen and (max-width: 868px){
     header{
       height: 40vh;
       min-height: 0;
     }
     h2{
       font-size: 3.2vw;
+    }
+
+    #welcomeMsg{
+      font-size: 1.5rem;
     }
 
     #rideHeader{
@@ -391,11 +415,6 @@ header {
       width: 120px;
       height: 120px;
     }
-
-    .navbarButton{
-      
-    }
-
 
   }
 
