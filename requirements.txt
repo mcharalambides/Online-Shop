@@ -1,1 +1,8 @@
 flask
+flask_sqlalchemy
+flask_session
+datetime
+dotenv
+pdfkit
+sqlalchemy
+mysql-connector-python

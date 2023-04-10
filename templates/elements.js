@@ -260,32 +260,37 @@ class MyHeader extends HTMLElement {
               <div style="padding-right: 40px;">
                 <a class="navbar-brand" href="/">
                   <div class="logo-image">
-                        <img src="../static/Logo.png" class="img-fluid">
+                        <img src="../static/Logo.jpeg" class="img-fluid">
                   </div>
                 </a>
               </div>
               <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
+                </li>`+
+                /*<li class="nav-item">
                   <a class="nav-link" href="#">2T Enduro</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Easy Enduro
+                </li>*/
+                `<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Rides
                   </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  <ul style="position: absolute;" class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+					<li><a class="dropdown-item" href="https://www.sayiousadventurepark.com/first-timers-course/">First Timers</a></li>
+					<li><a class="dropdown-item" href="https://www.sayiousadventurepark.com/enduro-tours-beginners/">Easy Enduro</a></li>
+					<li><a class="dropdown-item" href="https://www.sayiousadventurepark.com/enduro-tour-experts/intermediate/">2T Enduro</a></li>
+
                   </ul>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">First Timers</a>
-                </li>
-              </ul>` + 
+                </li>`+
+                // <li class="nav-item">
+                //   <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">First Timers</a>
+                // </li>
+				`{% if session['user'] %}
+			  <li class="nav-item">
+			  <a class="nav-link" href="/userProfile" tabindex="-1" aria-disabled="true">Profile</a>
+			</li>
+			{% endif %}
+		  </ul>` + 
             //   <div style="padding-left:60px;">
             //     <button class="btn btn-outline-success" type="submit">BOOK NOW</button>
             //   </div> 
@@ -320,9 +325,9 @@ class MyFooter extends HTMLElement {
         <div class="container">
           <p class="text-center">Copyright &copy;2021 Online Shop</p>
           <div class="d-flex justify-content-center">
-            <a href="#">Terms of Service</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Contact Us</a>
+            <a class="footerElement" href="https://www.enduroridescyprus.com/terms-conditions1">Terms of Service</a>
+            <a class="footerElement" href="https://www.enduroridescyprus.com/terms-conditions1">Privacy Policy</a>
+            <a class="footerElement" href="https://www.sayiousadventurepark.com/contact">Contact Us</a>
           </div>
         </div>
       </footer>`

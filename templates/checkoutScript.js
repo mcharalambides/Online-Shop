@@ -15,14 +15,16 @@ $(document).ready(function () {
     yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
 
-    birthday.min = today
+    birthday.min = today;
+
+    document.getElementById('dateSelected').click();
+    document.getElementById('personlInfo').click();
 
 
 });
 
-
 var personalInfoFlag = false;
-$("#personlInfo").on("click", function(e){
+$("#personlInfo").on("click", function(){
     const dateSelected = document.getElementById("personlInfoCollapse");
 
     if(personalInfoFlag){
@@ -30,25 +32,33 @@ $("#personlInfo").on("click", function(e){
         personalInfoFlag = false;
     }
     else{
-        dateSelected.style.height = "20vh";
+        if($(window).height() < 415)
+            dateSelected.style.height = "55vh";
+        else
+            dateSelected.style.height = "20vh";
         personalInfoFlag = true;
     }
 
 
 });
 
-$("#dateSelected").on("click", function(e){
+var dateSelectedFlag = false;
+$("#dateSelected").on("click", function(){
     const dateSelected = document.getElementById("dateSelectedCollapse");
 
-    if(personalInfoFlag){
+    if(dateSelectedFlag){
         dateSelected.style.height = "0px";
         dateSelected.style.padding = "0px";
-        personalInfoFlag = false;
+        dateSelectedFlag = false;
     }
     else{
+        if($(window).height() < 415)
+        dateSelected.style.height = "55vh";
+        else
         dateSelected.style.height = "23vh";
+
         dateSelected.style.padding = "5px";
-        personalInfoFlag = true;
+        dateSelectedFlag = true;
     }
 // $("input").on("invalid", function(){
 //     this.setCustomValidity("Please Give a Value");
@@ -73,3 +83,14 @@ function populateCountries(countryList){
     residence.append(opt2);
 })
 };
+
+
+$(window).on('resize', function(){
+    document.getElementById('dateSelected').click();
+    document.getElementById('personlInfo').click();
+
+    if($(window).height < 400){
+        $('h1').style.fontSize = '1rem';
+    }
+
+});

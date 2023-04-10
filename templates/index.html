@@ -26,15 +26,50 @@
         <!-- style="display:flex; justify-content:center; align-items: center; margin-top: 30px;" -->
         <div class="column1">
           {% if session['user'] %}
-          <h1 id="welcomeMsg"> Welcome {{session['user']}}</h1>
+          <h1 id="welcomeMsg"> Welcome {{session['firstName']}}</h1>
           {% endif %}
         </div>
         <div class = "column1">
           <div class="image_row">
-            <div id = "EE" class="btn btn-outline-success container1 ride"><img src="../static//easy_enduro_ride.JPG" alt="Easy Enduro Ride"><h2 class="centered">Easy Enduro Ride</h2></div>
-            <div id = "FT" class="btn btn-outline-success container1 ride"><img src="../static/First_timers_.JPG" alt="First Timers"><h2 class="centered">First Timers</h2></div>
-            <div ID = "2T" class="btn btn-outline-success container1 ride"><img src="../static/2T_enduro_ride.JPG" alt="2T Enduro Ride"><h2 class="centered">2T Enduro Ride</h2></div>
+            <div class = "column1">
+              <div id = "FT" class="btn btn-outline-success container1 ride"><img src="../static/First_timers_.JPG" alt="First Timers"><h2 class="centered">First Timers</h2></div>
+              <div class="column_bullets">
+                <h1 class="bulletText">&#x2022 Little or no previous experience on motorbike is needed.</h1>
+                <h1 class="bulletText">&#x2022 Learn how to ride a motorbike with clutch and gears.</h1>
+                <h1 class="bulletText">&#x2022 Ride in our indoor track for the first course.</h1>
+                <h1 class="bulletText">&#x2022 <u>Provided</u>: Guide, bike, fuel and all safety<br> equipment.</h1>
+                <h1 class="bulletText">&#x2022 Previous experience on a bicycle is mandatory.</h1>
+                <h1 class="bulletText">&#x2022 Bikes available for this ride: Lowered and easy 125-250cc motorbikes.</h1>
+                <h1 class="bulletText">&#x2022 <u>Level</u>: 0 - Beginner.</h1>
+              </div>
+            </div>
+            <div class="column1">
+              <div id = "EE" class="btn btn-outline-success container1 ride"><img src="../static//easy_enduro_ride.JPG" alt="Easy Enduro Ride"><h2 class="centered">Easy Enduro Ride</h2></div>
+              <div class="column_bullets">
+                <h1 class="bulletText">&#x2022 Previous motorbike with clutch and gears<br> experience required.</h1>
+                <h1 class="bulletText">&#x2022 Ride through easy terrain.</h1>
+                <h1 class="bulletText">&#x2022 Experience an enjoyable, adrenaline-filled, but above all safe ride.</h1>
+                <h1 class="bulletText">&#x2022 Riders <u>don’t need</u> enduro experience. </h1>
+                <h1 class="bulletText">&#x2022 <u>Provided</u>: Guide, bike, fuel, recovery and all safety equipment. </h1>
+                <h1 class="bulletText">&#x2022 Bikes available for this ride: 125-250cc motorbikes, some are lowered.</h1>
+                <h1 class="bulletText">&#x2022 <u>Level</u>: Beginner - Intermediate.</h1>
+              </div>
+            </div>
+            <div class="column1">
+              <div ID = "2T" class="btn btn-outline-success container1 ride"><img src="../static/2T_enduro_ride.JPG" alt="2T Enduro Ride"><h2 class="centered">2T Enduro Ride</h2></div>
+              <div class="column_bullets">
+                <h1 class="bulletText">&#x2022 Riders must have a motorbike valid riding licence.</h1>
+                <h1 class="bulletText">&#x2022 Riders must have previous enduro experience.</h1>
+                <h1 class="bulletText">&#x2022 Ride through a variety of terrain dependingon your level.</h1>
+                <h1 class="bulletText">&#x2022 Experience an enjoyable, adrenaline-filled, but above all safe ride.</h1>
+                <h1 class="bulletText">&#x2022 <u>Provided</u>: Guide, bike, fuel, recoveryand all safety equipment. </h1>
+                <h1 class="bulletText">&#x2022 Latest models of Bikes available for this ride: GasGas 2T or similar </h1>
+                <h1 class="bulletText">&#x2022 <u>Level</u>: Intermediate - Expert.</h1>
+              </div>
+            </div>
           </div>
+
+          
             <div id="collapsedCalendar" class="shadow p-3 mb-2 bg-white rounded-50 wrapper">
               <div class="wrapper_header">
                   <p class="current-date"></p>
@@ -67,10 +102,7 @@
             </div>
             <div class="column1">
               <select class="my-select-menu" id="numOfPeople">
-                {% for i in range(1,6) %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-
+                <option value=""></option>
               </select>
             </div>
           </div>
@@ -86,6 +118,7 @@
     <my-footer></my-footer>
 
      <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
      <script src="elements.js"></script>    
      <script src="script.js"></script>
     </body>

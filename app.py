@@ -1,20 +1,21 @@
-from calendar import month
-from concurrent.futures import thread
-from html.entities import html5
-# from crypt import methods
+from multiprocessing import reduction
 import os
-import sys
+# import sys
 import logging
+# from typing import final
 from flask import Flask,flash, render_template,send_file,request,redirect,url_for, session, Response
-import pandas as pd
-import mysql.connector
+# import mysql.connector
+# from mysql.connector import pooling
+import MySQLdb
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
-from datetime import timedelta
-from countries import available_countries
-from datetime import datetime
+from datetime import timedelta,datetime
 from dotenv import load_dotenv
 import pdfkit
+# from sqlalchemy import true
+from countries import availability
+from email_customer import send_email
+
 
 pdfConfig = pdfkit.configuration(wkhtmltopdf='wkhtmltopdf/bin/wkhtmltopdf.exe')
 load_dotenv()
@@ -55,99 +56,145 @@ with app.app_context():
 
 #DATABASE CONNECTION
 try:
-    mydb = mysql.connector.connect(
+    mydb = MySQLdb.connect(
     host= os.getenv("MYSQL_HOST"),
     user= os.getenv("MYSQL_USER"),
     password= os.getenv("MYSQL_PASS"),
-    database = os.getenv("MYSQL_DB")
+    database = os.getenv("MYSQL_DB"),
+    autocommit=True
     )
+    MySQLdb.threadsafety = 3
 except Exception as e:
     print(str(e))
 
-import views
+import views, schedule
 #AVAILABLE RIDES
-rides = {'EE' : 'Easy Enduro', 'FT': 'First Timers', '2T': '2T Enduro'}
-price = {'Easy Enduro' : 60, 'First Timers': 70, '2T Enduro': 120}
+rides = {'EE' : 'Easy Enduro 1H', 'FT': 'First Timers', '2T': '2T Enduro'}
+motors = {'EE' : 6, 'FT': 4, '2T': 5}
+price = {'Easy Enduro 1H' : 60, 'First Timers': 70, '2T Enduro': 120}
 
-def time_slots(day, ride):
-    new_time_slots = ['9:00-11:00','11:00-12:00','14:00-15:00','15:00-17:00']
+def time_slots(day, ride, date):
+    # new_time_slots = ['9:00-11:00','11:00-12:00','14:00-15:00','15:00-17:00']
 
-    #Because javascript numbers week days from index=0
-    day = int(day) + 1
+    # #Because javascript numbers week days from index=0
+    # day = int(day)
+    # if day == 1:
+    #     new_time_slots.remove('9:00-11:00')
+    #     if ride == '2T':
+    #         new_time_slots.remove('11:00-12:00')
+    #         new_time_slots.remove('14:00-15:00')
+    # if day == 2:
+    #     if ride == '2T':
+    #         new_time_slots.remove('14:00-15:00')
+    #         new_time_slots.remove('11:00-12:00')
+    #     if ride == 'FT':
+    #         new_time_slots.remove('15:00-17:00')
+    # if day == 3:
+    #     if ride == 'FT':
+    #         new_time_slots.remove('15:00-17:00')
+    #     if ride == '2T':
+    #         new_time_slots.remove('11:00-12:00')
+    #         new_time_slots.remove('15:00-17:00')
+    # if day == 4:
+    #     new_time_slots.remove('14:00-15:00')
+    #     if ride == 'FT':
+    #         new_time_slots.remove('15:00-17:00')
+    #     if ride == '2T':
+    #         new_time_slots.remove('11:00-12:00')
+    # if day == 5:
+    #     if ride == '2T':
+    #         new_time_slots.remove('11:00-12:00')
+    #         new_time_slots.remove('15:00-17:00')
+    # if day == 6:
+    #     new_time_slots.remove('15:00-17:00')
+    #     if ride == '2T':
+    #         new_time_slots.remove('11:00-12:00')
+    # if day == 0:
+    #     new_time_slots.remove('15:00-17:00')
+    #     if ride == 'FT':
+    #         new_time_slots.remove('9:00-11:00')
+    #     if ride == '2T':
+    #         new_time_slots.remove('11:00-12:00')
 
-    if day == 2:
-        new_time_slots.remove('9:00-11:00')
-        if ride == '2T':
-            new_time_slots.remove('11:00-12:00')
-            new_time_slots.remove('14:00-15:00')
-    if day == 3:
-        if ride == '2T':
-            new_time_slots.remove('14:00-15:00')
-            new_time_slots.remove('11:00-12:00')
-        if ride == 'FT':
-            new_time_slots.remove('15:00-17:00')
-    if day == 4:
-        if ride == 'FT':
-            new_time_slots.remove('15:00-17:00')
-        if ride == '2T':
-            new_time_slots.remove('11:00-12:00')
-            new_time_slots.remove('15:00-17:00')
-    if day == 5:
-        new_time_slots.remove('14:00-15:00')
-        if ride == 'FT':
-            new_time_slots.remove('15:00-17:00')
-        if ride == '2T':
-            new_time_slots.remove('11:00-12:00')
-    if day == 6:
-        if ride == '2T':
-            new_time_slots.remove('11:00-12:00')
-            new_time_slots.remove('15:00-17:00')
-    if day == 7:
-        new_time_slots.remove('15:00-17:00')
-        if ride == '2T':
-            new_time_slots.remove('11:00-12:00')
-    if day == 1:
-        new_time_slots.remove('15:00-17:00')
-        if ride == 'FT':
-            new_time_slots.remove('9:00-11:00')
-        if ride == '2T':
-            new_time_slots.remove('11:00-12:00')
+    # # Check for number of orders in this time slots
+    # final_time_slots = []
+    # for time in new_time_slots:
+    #     sql = "select count(*) FROM orders WHERE `Date to Ride`= '" + date + "' AND Time = '" + time +"' GROUP BY `Date to Ride`,Time"
+    #     mycursor.execute(sql)
+    #     myresult = mycursor.fetchall()
+    #     # print(myresult[0],availability(time,date))
+    #     if availability(time,date) > 0:
+    #         if len(myresult) != 0 and myresult[0][0] < availability(time,date):
+    #             final_time_slots.append(time)
+    #         elif len(myresult) == 0:
+    #             final_time_slots.append(time)
 
-    # Check for availabiity
+    final_time_slots = []
+    try:
+        mycursor = mydb.cursor()
+        sql = f"call specificDate('{date}','{ride}')"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchall()
+        for row in myresult:
+            final_time_slots.append(row[0])
+    except Exception as e:
+        print(str(e))
+    finally: 
+        mycursor.close()
     """An exeis ta dedomena stin mnimi tote yparxei kindinos na ginei kapoio transaction
      kai na min exoun enimerwthei ta dedomena kai na proxwriseis me to transaction pou den prepei 
      na ginei. Otan ginei ena succesful transaction tote enimerwse to DataStructure pou xrisimopoieies"""
-    # mycursor = mydb.cursor()
-    # myTable = pd.read_sql('select * from orders',mydb)
-    # print(len(myTable.loc[ myTable['Time'] == '9:00-11:00']))
-    # for time in new_time_slots:
-    #     mycursor.execute(f"SELECT * FROM Orders WHERE Time ='{time}'")
-    #     myresult =  mycursor.fetchall()
-    # mycursor.close()
-    # myresult = list(myresult[0])
-    return new_time_slots
+    return final_time_slots
 
+def get_available_motors(date, ride, time):
+    global motors
+    global rides
 
-def check_time_clots():
-    pass
-def check_availability():
-    pass
+    mycursor = mydb.cursor()
+    sql = "SELECT SUM(`Number of People`) FROM orders WHERE `Date to Ride`= '" + date + "' AND Time = '" + time +"' AND Ride = '" \
+    + rides[ride] + "' GROUP BY `Date to Ride`,Time, Ride"
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+    mycursor.close()
+
+    #Set number of motors for 2T at 3 for Tuesday and Monday at 15:00-17:00
+    if ride == '2T':
+        if time == '15:00-17:00' and (datetime.strptime(date, '%Y-%m-%d').weekday() in [1,3]):
+            num_of_motors = 3
+        else:
+            num_of_motors = 5
+    else:
+        num_of_motors = motors[ride]
+
+    #Calculate the remaining motors for each time slot
+    if len(myresult) != 0:
+        number_of_motors = num_of_motors - int(myresult[0][0])
+    elif len(myresult) == 0:
+        number_of_motors = num_of_motors
+    
+    if number_of_motors <= 0:
+        return 0
+    else:
+        return number_of_motors
+    
 
 @app.route('/')
 def hello_world():
-    # if 'user' in session.keys():
-    #     return render_template("index.html", data = session['user'])
-    # else:
-    #     return render_template("index.html")
+
     #POP KEYS DAY DAYOFWEEK MONTH RIDE ETC FROM SESSION DIC IF THEY EXIST
-    
-    # if 'user' in session:
-    #     for key in list(session.keys()):
-    #         if key != '_permanent':
-    #             del session[key]
-         
+    print(session.keys(), session.values())
     return render_template("index.html")
 
+@app.route('/getInactiveDays', methods = ["POST"])
+def getInactiveDays():
+    mycursor = mydb.cursor()
+    sql = f"call completeDays('{datetime.now().date()}','{datetime.now().date() + timedelta(days=21)}')"
+    mycursor.execute(f"call completeDays('{datetime.now().date() + timedelta(days=1)}','{datetime.now().date() + timedelta(days=21)}')")
+    myresult = mycursor.fetchall()
+    dates = []
+    for row in myresult:
+        dates.append(str(row[0]))
+    return list(dates)
 
 @app.route('/getDays', methods = ["POST"])
 def getDays():
@@ -156,18 +203,41 @@ def getDays():
     #Check that the day is numeric and 1-7
     if not day.isnumeric():
         app.logger.error("User gave non numeric value")
+        print("User gave non numeric value")
         return Response(status=500)
     elif 1 < int(day) > 7:
+        print("User gave day our of range")
         return Response(status=500)
     
     #Check that the ride is one of the options
     ride = request.form.get("ride")
 
     if ride not in rides:
+        print("User gave ride value not in list")
         return Response(status=500)
     
-    return time_slots(day,ride)
+    date = request.form.get("date")
+    try:
+        new_Date = datetime.strptime(date, '%Y-%m-%d').date()
+        end_date = datetime.now() + timedelta(days=21)
+        if not datetime.today().date() < new_Date <=end_date.date():
+            print("User gave date not in range of 1-21")
+            return Response(status=500)
+    except Exception as e:
+        print(str(e))
 
+    return time_slots(day,ride,date)
+
+@app.route('/getMotors', methods=['POST'])
+def getMorors():
+    date = request.form.get("date")
+    ride = request.form.get("ride")
+    time = request.form.get("time")
+    if time != "":
+        return str(get_available_motors(date,ride,time))
+    else:
+        return '0'
+    
 @app.route('/style.css')
 def styling():
     return render_template("static/style.css")
@@ -183,32 +253,44 @@ def loginStyling():
 @app.route('/loginUser', methods = ["POST"])
 def loginRequest():
     # CHECK IF THE USER EXISTS IN DATABASE
-    mycursor = mydb.cursor()
     username = request.form['usrname']
     password = request.form['pass']
 
+    mycursor = mydb.cursor()
     mycursor.execute(f"SELECT * FROM Users WHERE username ='{username}' and password = '{password}'")
     myresult = mycursor.fetchall()
     if len(myresult) == 1:
-        # session.clear()
-        session['user'] = username
-        mycursor.close()
-        if 'admin' in session:
-            del session['admin']
-        return redirect(url_for("hello_world"))
+        if myresult[0][1] == username and myresult[0][2] == password:
+            for key in list(session.keys()):
+                if key != '_permanent':
+                    del session[key]
+            session['user'] = username
+            session['firstName'] = myresult[0][4]
+            mycursor.close()
+            return redirect(url_for("hello_world"))
 
     # CHECK IF THE USER EXISTS IS AN ADMIN
     mycursor.execute(f"SELECT * FROM Admin WHERE username ='{username}' and password = '{password}'")
     myresult = mycursor.fetchall()
     if len(myresult) == 1:
-        # session.clear()
-        session['admin'] = True
-        session['page'] = 1
-        # session['expiry'] = datetime.datetime.strptime(datetime.today(), "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=1)
-        mycursor.close()
-        return redirect(url_for("admin"))
+        if myresult[0][1] == username and myresult[0][2] == password:
+            for key in list(session.keys()):
+                if key != '_permanent':
+                    del session[key]
+            session['admin'] = True
+            session['page'] = 0
+            session['firstName'] = ''
+            session['lastName'] = ''
+            session['dateFrom'] = ''
+            session['dateTo'] = ''
+            session['sortField'] = ''
+            session['sortDierection'] = True
+            # session['expiry'] = datetime.datetime.strptime(datetime.today(), "%Y-%m-%d %H:%M:%S") + datetime.timedelta(days=1)
+            mycursor.close()
+            return redirect(url_for("admin"))
 
-    #CHECK IF THE USER IS ALREADY LOGGED IN FROM SESSIONS AND FROM FIELD IN DATABASE 
+    #CHECK IF THE USER IS ALREADY LOGGED IN FROM SESSIONS AND FROM FIELD IN DATABASE
+    mycursor.close() 
     return redirect(url_for("loginPage"))
 
 @app.route('/logoutUser')
@@ -247,39 +329,61 @@ def loginPage():
 def registerPage():
     return render_template("register.html")
 
-checkoutData = None
+@app.route('/userProfile')
+def userProfile():
+    if "user" in session.keys():
+        # GET DATA FOR USER IF LOGGED IN
+        mycursor = mydb.cursor()
+        mycursor.execute(f"SELECT * FROM Users WHERE username ='{session['user']}'")
+        myresult =  mycursor.fetchall()
+        mycursor.close()
+        myresult = list(myresult[0])
+        firstName = myresult[4]
+        lastName = myresult[5]
+        email = myresult[3]
+        telephone = myresult[6]
+        password = myresult[2]
+    else:
+        return redirect(url_for("hello_world"))
+        
+    return render_template("userProfile.html", data = [firstName, lastName, email, password, telephone])
+
 @app.route('/checkout', methods = ["POST"])
 def checkoutPage():
-    global checkoutData
     checkoutData = request.get_json()
     print(checkoutData)
 
     if checkoutData is not None: 
         if not ('day' in checkoutData.keys() and checkoutData['day'].isnumeric() ): 
             print("problem with day")
-            return redirect(url_for("hello_world"))
+            #CHECK THAT DAY IS IN THE 21 VALID DAYS THAT ARE NOT DISABLED
+            return Response(status=500)
         
         if not ('month' in checkoutData.keys() and checkoutData['month'].isnumeric() ):
             print("problem with month") 
-            return redirect(url_for("hello_world"))
+            return Response(status=500)
         
         if not ('year' in checkoutData.keys() and checkoutData['year'].isnumeric() ):
             print("problem with year") 
-            return redirect(url_for("hello_world"))
-
-        if not ('people' in checkoutData.keys() and checkoutData['people'].isnumeric() ):
+            return Response(status=500)
+        
+        print(checkoutData['people'])
+        if not ('people' in checkoutData.keys() and checkoutData['people'] is not None and checkoutData['people'].isnumeric() ):
             print("problem with people") 
-            return redirect(url_for("hello_world"))
+            return Response(status=500)
 
         if not ('ride' in checkoutData.keys() and checkoutData['ride'] in rides.keys()):
             print("problem with ride") 
-            return redirect(url_for("hello_world"))
-        if not ('time' in checkoutData.keys() and checkoutData['time'] in time_slots(checkoutData['weekDay'], checkoutData['ride']) ):
-            print("problem with time") 
-            return redirect(url_for("hello_world"))
+            return Response(status=500)
+        
+        date = checkoutData['year'] + "-" + checkoutData['month'] + "-" + checkoutData['day']
+        if not ('time' in checkoutData.keys() and checkoutData['time'] in time_slots(checkoutData['weekDay'], checkoutData['ride'], date)):
+            print("problem with time")
+            flash('You need to select a time') 
+            return Response(status=500)
     else:
         print("not logged in")
-        return redirect(url_for("hello_world"))
+        return Response(status=500)
     
     print("All checks passed")
     session['day'] = checkoutData['day']
@@ -294,12 +398,14 @@ def checkoutPage():
     
 @app.route('/checkoutComplete', methods = ["GET"])
 def checkoutComplete():
-    global checkoutData
     global rides
 
     if not set(['day','month','year','ride','time','people']).issubset(set(session.keys())):
+        '''YOU NEED TO CHECK AGAIN EVERY FIELD BECAUSE HE CAN SUBMIT 1 VALID ORDER AND THEN THE KEYS
+        # IN SESSION ARE SET SO HE CAN SUBMIT FALSE ORDERS. CREATE A FUNCTION THAT CHECKS THE FIELDS 
+        # SO YOU CAN CALL EVERY TIME'''
         return redirect(url_for("hello_world"))
-
+    
     session['price'] = price[session['ride']] * int(session['people'])
     if "user" in session.keys():
         # GET DATA FOR USER IF LOGGED IN
@@ -308,30 +414,21 @@ def checkoutComplete():
         myresult =  mycursor.fetchall()
         mycursor.close()
         myresult = list(myresult[0])
-        print(myresult)
         firstName = myresult[4]
         lastName = myresult[5]
         email = myresult[3]
         telephone = myresult[6]
-        session['firstName'] = firstName
-        session['lastName'] = lastName
-        session['email'] = email
-        session['telephone'] = telephone
-    
-    # data = request.get_json();
-    # day = request.form.get("day")
-    # month = request.form.get("month")
-    # year = request.form.get("year")
-    # ride = request.form.get("ride")
+        return render_template("checkout.html", data=[firstName, lastName, email, telephone])
     
     #check if every field in checkoudata is set and correct
-
     return render_template("checkout.html")
-
+    
 @app.route('/submitOrder', methods=['POST'])
 def submitOrder():
 
-    #CHEC KFIELDS FOR VALIDITY
+    #CHECK FIELDS FOR VALIDITY
+    '''YOU NEED TO CHECK THAT ALL FIELDS ARE SET HERE BECAUSE HE CAN MAKE AN ORDER THEN PRESS THE BACK BUTTON AND GO BACK TO THE CHECKOUT
+    PAGE TO RESUMBIT AND ALREADY SUBMITED PAGE. OFCOURSE HE WILL BE AT THE STRIPE PAGE BUT STILL'''
     username = session.get("user", "Guest")
     ride = session['ride']
     dateToRide = session["year"] + "-" + session["month"] + "-" + session["day"]
@@ -341,26 +438,44 @@ def submitOrder():
     lastName = request.form['lastName']
     email = request.form['email']
     telephone = request.form['telephone']
-    ethnicity = request.form['ethnicity']
-    residence = request.form['residence']
+    ethnicity = request.form.get('ethnicity','')
+    residence = request.form.get('residence','')
     birthday = request.form['birthday']
     driving = "YES" if 'license' in  request.form.keys() else "NO"
 
+    if not set(['day','month','year','ride','time','people']).issubset(set(session.keys())):
+        print("missing fields")
+        print(session)
+        return redirect(url_for("hello_world"))
 
+    from payment import create_payemnt
+    url = create_payemnt(session['price'])
+    redirect(url)
+    
     sql = "INSERT INTO orders(`UserOrdered`, `ride`, `Date to Ride`, `Time`, `Number of People`, `FirstName`, `LastName`, `email`, `telephone`, `Ethnicity`, `Residence`, `Date Of Birth`, `Driving License`) " \
     +"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     val = (username, ride, dateToRide, time, people, firstName, lastName, email, telephone, ethnicity, residence, birthday, driving)
     mycursor = mydb.cursor()
+    print(f'INSERT INTO orders(`UserOrdered`, `ride`, `Date to Ride`, `Time`, `Number of People`, `FirstName`, `LastName`, `email`, `telephone`, `Ethnicity`, `Residence`, `Date Of Birth`, `Driving License`) " \
+    +"VALUES ({username}, {ride}, {dateToRide}, {time}, {people}, {firstName}, {lastName}, {email}, {telephone}, {ethnicity}, {residence}, {birthday}, {driving}')
     mycursor.execute(sql, val)
     mydb.commit()
     mycursor.close()
 
+
+    # send_email(email, time, dateToRide)
+    # from payment import create_payemnt
+    # url = create_payemnt(session['price'])
+    for key in list(session.keys()):
+        if key not in ['_permanent', 'user', 'firstName']:
+            del session[key]
+
     return redirect(url_for("hello_world"))
 
 
-@app.route('/2T_enduro_ride.jpg')
-def image1():
-    return send_file("rides/2T_enduro_ride.jpg", mimetype='image/gif')
+# @app.route('/2T_enduro_ride.jpg')
+# def image1():
+#     return send_file("rides/2T_enduro_ride.jpg", mimetype='image/gif')
 
 @app.route('/rides/easy_enduro_ride.jpg')
 def image2():
@@ -401,19 +516,45 @@ def registerUser():
     return redirect(url_for('loginPage'))
 
 app.add_url_rule('/admin', view_func=views.admin)
+app.add_url_rule('/schedule', view_func=views.schedule)
+app.add_url_rule('/adminfilters', view_func=views.adminfilters, methods=['POST'])
+app.add_url_rule('/sortfilters', view_func=views.sortFilerts, methods=['POST'])
+app.add_url_rule('/userProfileUpdate', view_func=views.userProfileUpdate, methods=['POST'])
+app.add_url_rule('/nextPage', view_func=views.nextPage, methods=['GET'])
+app.add_url_rule('/instructorLeave', view_func=views.instructorLeave, methods=['POST'])
+app.add_url_rule('/getSchedule', view_func=schedule.getSchedule, methods=['POST'])
+app.add_url_rule('/getRidesforDate', view_func=schedule.getRidesforDate, methods=['POST'])
+app.add_url_rule('/updateFromAdmin', view_func=schedule.updateRidesTable, methods=['GET'])
+app.add_url_rule('/deleteTimeRow', view_func=schedule.deleteTimeRow, methods=['GET'])
+app.add_url_rule('/updateTime', view_func=schedule.updateTime, methods=['POST'])
 
-@app.route('/downloadPDF')
+
+
+
+# app.add_url_rule('/getOrders', view_func=views.getOrders, methods=['GET'])
+
+@app.route('/downloadPDF', methods=['GET'])
 def downloadPDF():
-    myTable = pd.read_sql('select * from orders',mydb)
+    from views import filterData
+    myTable = filterData()
     html_string = myTable.to_html()
     pdfkit.from_string(html_string, "orderTable.pdf", configuration=pdfConfig)
     return send_file('orderTable.pdf', download_name='orderTable.pdf',mimetype='application/pdf')
 
-@app.route('/downloadCSV')
+@app.route('/downloadCSV', methods=['GET'])
 def downloadCSV():
-    myTable = pd.read_sql('select * from orders',mydb)
+    from views import filterData
+    myTable = filterData()
     myTable.to_csv('customers.csv', encoding='utf-8', index=False)
     return send_file('customers.csv', download_name='table.csv',mimetype='text/csv')
+
+@app.route('/adminScript.js')
+def adminScript():
+    return render_template("adminScript.js")
+
+@app.route('/scheduleScript.js')
+def scheduleScript():
+    return render_template("scheduleScript.js")
 
 # @app.after_request
 # def after_request(response):

@@ -1,6 +1,16 @@
 html,body{
   min-height: 100vh;
 }
+
+header{
+  height: 25vh;
+}
+
+.navbar {
+  font-size: 30px;
+  padding-top: 0px;
+  font-weight: 600;
+}
 #checkoutInfo {
     margin-top: 2%;
     margin-bottom: 2%;
@@ -86,15 +96,15 @@ h4{
   .innerInfo{
     border-radius: 5px;
     padding: 5px;
-    border-bottom: 3.5px solid #00000057!important
+    border-bottom: 3.5px solid #1d1d1d!important
   }
 
-  @media only screen and (max-width: 768px){
+  @media only screen and (max-width: 739px){
     h1{
       font-size: 0.8rem;
     }
     #checkoutInfo{
-      width: 85vw;
+      width: 90vw;
     }
 
     #firstName{
@@ -112,5 +122,26 @@ h4{
       grid-template-columns: 1fr;
       justify-items: stretch;
     }
+
+
+  }
+
+  @media only screen and (min-width: 740px) and (max-width: 950px){
+    h1{
+      font-size: 1rem;
+    }
+  }
+
+  @media only screen and (min-height: 100px) and (max-height: 649px) {
+    header{
+      height: 55vh;
+    }
+  }
+
+    @media only screen and (min-height: 650px) and (max-height: 950px) {
+      header{
+        height: 37vh;
+      }
+  
   }
 

@@ -250,3 +250,38 @@ def available_countries():
 	"Zimbabwe",
 	"Åland Islands"]
     return list_of_countries
+
+def availability(time,date):
+	from __main__ import mydb
+	# from datetime import datetime,timedelta
+	# mycursor = mydb.cursor()
+
+	# new_Date = datetime.now().date()
+	# mycursor.execute(f"call specificDate('2023-03-04')")
+	# myresult = mycursor.fetchall()
+	# print(myresult)
+	# mycursor.close()
+        
+	# instructors = {}
+    # day_of_week = 1
+	# for row in myresult:
+    #     temp = {}
+	# 	for _ in range(0,3):
+    #     	temp[day_of_week]
+
+	final_time_slots = {}
+
+	mycursor = mydb.cursor()
+	mycursor.execute(f"call specificDate('{date}')")
+	result = mycursor.fetchall()
+	for row in result:
+		final_time_slots[row[0]] = row[1]
+	mycursor.close()
+	# instructors = {1:{'9:00-11:00':0, '11:00-12:00':2,'14:00-15:00':2,'15:00-17:00':2},
+	# 				2:{'9:00-11:00':2, '11:00-12:00':2,'14:00-15:00':1,'15:00-17:00':1},
+	# 				3:{'9:00-11:00':2, '11:00-12:00':2,'14:00-15:00':1,'15:00-17:00':1},
+	# 				4:{'9:00-11:00':2, '11:00-12:00':2,'14:00-15:00':0,'15:00-17:00':1},
+	# 				5:{'9:00-11:00':2, '11:00-12:00':2,'14:00-15:00':2,'15:00-17:00':2},
+	# 				6:{'9:00-11:00':2, '11:00-12:00':2,'14:00-15:00':3,'15:00-17:00':0},
+	# 				0:{'9:00-11:00':2, '11:00-12:00':2,'14:00-15:00':3,'15:00-17:00':0}}
+	return final_time_slots[time]

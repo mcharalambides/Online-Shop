@@ -6,14 +6,13 @@ const months = {
     "1": "January", "2": "February", "3": "March", "4": "April", "5": "May", "6": "June", "7": "July",
     "8": "August", "9": "September", "10": 'October', "11": "November", "12": "December"
   };
-const rides = {'EE' : 'Easy Enduro', 'FT': 'First Timers', '2T': '2T Enduro'};
-  
+const rides = {'EE' : 'Easy Enduro 1H', 'FT': 'First Timers', '2T': '2T Enduro'};
 // const week = { "1": "Sun", "2": "Mon", "3": "Tue", "4": "Wed", "5": "Thu", "6": "Fri", "7": "Sat" };
 
 // Set the initial banner image
 let currentBanner = 0;
 bannerImage.src = bannerImages[currentBanner];
-
+var disabledDays;
 // Function to change the banner image
 function changeBanner() {
   currentBanner++;
@@ -31,17 +30,33 @@ function changeBanner() {
   }, 500);
 }
 
-
 $(document).ready(function () {
 
     var date = new Date();
+    document.body.style.zoom = "90%";
+    var date2 = new Date(date.getFullYear(), date.getMonth()+1, 0)
 
-    renderCalendar(date.getMonth()+1, date.getFullYear());
+    $.ajax({
+        type: 'POST',       
+        url: "/getInactiveDays",
+        context: document.body,
+        global: false,
+        async:false,
+        success: function(data) {
+            disabledDays = data;
+        }
+    });
+    //if its the last day of the month render calendar starting from the next month
+    if(date.toDateString()  === date2.toDateString())
+        renderCalendar(date.getMonth()+2, date.getFullYear());
+    else
+        renderCalendar(date.getMonth()+1, date.getFullYear());
 });
 
 function days_between(date1) {
 
     var date2 = new Date();
+    date2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate())
     // The number of milliseconds in one day
     const ONE_DAY = 1000 * 60 * 60 * 24;
 
@@ -78,7 +93,7 @@ function renderCalendar(month,year){
 
     var ul = document.querySelector(".days");
     var li;
-
+    
     //Days of previous month
     var StartingPoint = daysInPreviousMonth - firstDayofThisMonth + 1;
     if(firstDayofThisMonth != 0 ){
@@ -91,18 +106,42 @@ function renderCalendar(month,year){
         }
     }
 
-    var dayActivation;
+    // console.log(inactiveDays2);
+    // $.get('/getInactiveDays', function(result){
+    //     var inactiveDays = new Array();
 
+    //     result.forEach(item =>inactiveDays.push(new Date(item).getDate()))
+
+    // console.log(new Date(disabledDays[0]).ge)
+    //Populate calendar with days
+    //Old Way
+    // for(var i=1; i<=lastDateofMonth; i++){
+    //     li = document.createElement("li");
+    //     li.innerHTML = i;
+        
+    //     var diff = days_between(new Date(currYear, currMonth - 1, i));
+    //     if((diff > 21) || (diff <= 0))
+    //         dayActivation = "inactive";
+    //     else
+    //         dayActivation = "active";
+
+    //     li.setAttribute('class','calendarDay ' + dayActivation);
+    //     li.setAttribute('id',i);
+    //     ul.appendChild(li);
+    // }
+
+    var dayActivation;
     //Populate calendar with days
     for(var i=1; i<=lastDateofMonth; i++){
         li = document.createElement("li");
         li.innerHTML = i;
         
-        var diff = days_between(new Date(currYear, currMonth - 1, i));
-        if((diff > 21) || (diff <= 0))
-            dayActivation = "inactive";
-        else 
+        var newCurrMonth = ((currMonth.toString().length == 1) ? '0' + currMonth : currMonth);
+        var newDay = ((i.toString().length == 1) ? '0' + i : i);
+        if(disabledDays.indexOf(currYear + "-" + newCurrMonth + "-" + newDay) > -1)
             dayActivation = "active";
+        else
+            dayActivation = "inactive";
 
         li.setAttribute('class','calendarDay ' + dayActivation);
         li.setAttribute('id',i);
@@ -201,6 +240,7 @@ $("body").on("click", function(e){
 on a ride option*/
 var chosenRide
 $(".ride").on("click", function(e){
+
     chosenRide = this.id;
     const calendar = document.querySelector("#collapsedCalendar");
     const checkoutBtn = document.querySelector("#checkoutBtn");
@@ -208,7 +248,12 @@ $(".ride").on("click", function(e){
     if(calendar.style.opacity == 0){
         calendar.style.opacity = "1";
         checkoutBtn.style.opacity = "1";
-        calendar.style.height = "630px";
+        var hasTouchscreen = 'ontouchstart' in window;
+
+    if(hasTouchscreen)
+            calendar.style.height = "580px";
+        else
+            calendar.style.height = "630px";
         checkoutBtn.style.height = "40px";
     }
     else{
@@ -241,18 +286,49 @@ function clickedOnAnchor(){
 
 //Funciton to get available time slots when click on day on the calendar
 function getDays(day_of_week_to_send){
-    $.post("/getDays", { 'day': day_of_week_to_send, 'ride':chosenRide }, function (result) {
+    const date_to_Send = year_to_send + "-" + month_to_send_number + "-" + day_to_send
+    $.post("/getDays", { 'day': day_of_week_to_send, 'ride':chosenRide, 'date':date_to_Send }, function (result) {
         const selectTag = document.getElementById("availableTimeSlots");
         $("#availableTimeSlots").empty();
-
+        $("#numOfPeople").empty();
+        let opt = document.createElement("option");
+        opt.value = "";
+        opt.selected = true;
+        opt.disabled = true;
+        opt.hidden = true;
+        selectTag.append(opt);
         result.map((item) =>{
-            let opt = document.createElement("option");
+            opt = document.createElement("option");
             opt.value = item;
             opt.innerHTML = item;
             selectTag.append(opt);
-        })
+        });
+
     }).fail(function(data) {
         console.log(data);
       });
 
 }
+
+
+
+$('#availableTimeSlots').change( function() {
+    const date_to_Send = year_to_send + "-" + month_to_send_number + "-" + day_to_send;
+    console.log(date_to_Send, this.value, chosenRide);
+
+    $.post("/getMotors", { 'date': date_to_Send, 'ride':chosenRide, 'time':this.value }, function (result) {
+        if(result == '0')
+            $('#numOfPeople').empty();
+        else
+            $('#numOfPeople').empty();
+            for(i=1; i<=parseInt(result); i++){
+                var opt = document.createElement("option");
+                opt.value = i;
+                opt.innerHTML = i;
+                document.getElementById("numOfPeople").appendChild(opt);
+            }
+
+    }).fail(function(data) {
+        console.log(data);
+      });
+  });

@@ -21,7 +21,7 @@
           <h1 class="">Number of People: {{session['people']}}</h1>
           <h1 class="">The ride you chose is : {{session['ride']}}</h1>
         </div>
-          <h1 class="">The Final Cost is : {{session['price']}}€</h1>
+          <h1 style= "color: #284722" class="">The Final Cost is : {{session['price']}}€</h1>
         </div>
       </div>
       <div id="checkoutInfo">
@@ -29,20 +29,20 @@
           <div id="dateSelected" class="clickable"><h1>Personal Information</h1></div>
           <form id="submitOrder" action="/submitOrder" method="POST">
           <div id="dateSelectedCollapse" class="hiddenElement">
-            {% if session['firstName'] %}
-            <input required type="text" class="form-control" name="firstName" value = "{{session['firstName']}}" required="required" id="firstName" minlength="5">
+            {% if session['user'] %}
+            <input required type="text" class="form-control" name="firstName" placeholder="First Name" value = "{{data[0]}}" required="required" id="firstName" minlength="5">
             {% else %}
             <input required type="text" class="form-control" name="firstName" placeholder="First Name" required="required" id="firstName" minlength="5">
             {% endif %}
 
-            {% if session['lastName'] %}
-            <input required type="text" class="form-control" name="lastName" value = "{{session['lastName']}}" required="required" id="lastName" minlength="5">
+            {% if session['user'] %}
+            <input required type="text" class="form-control" name="lastName" placeholder="Last Name" value = "{{data[1]}}" required="required" id="lastName" minlength="5">
             {% else %}
             <input required type="text" class="form-control" name="lastName" placeholder="Last Name" required="required" id="lastName" minlength="5">
             {% endif %}
 
-            {% if session['email'] %}
-            <input required type="email" class="form-control" name="email" value="{{session['email']}}" required="required" id="email" minlength="5">
+            {% if session['user'] %}
+            <input required type="email" class="form-control" name="email" placeholder="Email" value="{{data[2]}}" required="required" id="email" minlength="5">
             {% else %}
             <input required type="email" class="form-control" name="email" placeholder="Email" required="required" id="email" minlength="5">
             {% endif %}
@@ -51,15 +51,15 @@
             <!-- <h4>Birthday</h4>
             <h4>Ethnicity</h4>
             <h4>Place of Residence</h4> -->
-            {% if session['telephone'] %}
-            <input required type="tel" class="form-control" name="telephone" value="{{session['telephone']}}" required="required" id="telephone" minlength="8">
+            {% if session['user'] %}
+            <input required type="tel" class="form-control" name="telephone" placeholder="Telephone" value="{{data[3]}}" required="required" id="telephone" minlength="8">
             {% else %}
             <input required type="tel" class="form-control" name="telephone" placeholder="Telephone" required="required" id="telephone" minlength="8">
             {% endif %}
-            <select required form="submitOrder" class="form-control" id="ethnicity" name="ethnicity">
+            <select form="submitOrder" class="form-control" id="ethnicity" name="ethnicity">
               <option value="" disabled selected hidden>Ethnicity</option>
             </select>
-            <select required form="submitOrder" class="form-control" id="residence" name="residence">
+            <select form="submitOrder" class="form-control" id="residence" name="residence">
               <option value="" disabled selected hidden>Place of Residence</option>
             </select>
             <div class="column_new">
@@ -83,7 +83,8 @@
   </div>
   <my-footer></my-footer>
 
-  <script src="https://code.jquery.com/jquery-latest.min.js"></script>    
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
   <script src="elements.js"></script>
   <script src="checkoutScript.js"></script>
 </body>
