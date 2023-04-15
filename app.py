@@ -15,7 +15,7 @@ import pdfkit
 from email_customer import send_email
 import stripe
 
-pdfConfig = pdfkit.configuration(wkhtmltopdf='/home/MariosCh19/mysite/wkhtmltopdf/bin/wkhtmltopdf.exe')
+# pdfConfig = pdfkit.configuration(wkhtmltopdf='/home/MariosCh19/mysite/wkhtmltopdf/bin/wkhtmltopdf.exe')
 load_dotenv()
 import pytz
 IST = pytz.timezone('Asia/Nicosia')
