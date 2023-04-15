@@ -9,19 +9,19 @@ from datetime import timedelta,datetime
 import pytz
 
 load_dotenv()
-IST = pytz.timezone('Asia/Nicosia')
+# IST = pytz.timezone('Asia/Nicosia')
 
-celeryApp = Celery('tasks', broker=os.getenv('SQLALCHEMY_DATABASE_URI'))
-celeryApp.conf.update(
-    CELERY_RESULT_BACKEND=os.getenv('SQLALCHEMY_DATABASE_URI'),
-    CELERY_TIMEZONE='Asia/Nicosia'
-)
+# celeryApp = Celery('tasks', broker=os.getenv('SQLALCHEMY_DATABASE_URI'))
+# celeryApp.conf.update(
+#     CELERY_RESULT_BACKEND=os.getenv('SQLALCHEMY_DATABASE_URI'),
+#     CELERY_TIMEZONE='Asia/Nicosia'
+# )
 
-@celeryApp.task
-def my_task():
-    print("i am here celery")
-    mydb.execute_update("DELETE FROM tempOrders WHERE UserOrdered='" + session['stripe_session'] + "'")
-    return
+# @celeryApp.task
+# def my_task():
+#     print("i am here celery")
+#     mydb.execute_update("DELETE FROM tempOrders WHERE UserOrdered='" + session['stripe_session'] + "'")
+#     return
 
 def create_payemnt(price, email):
     stripe.api_key = os.getenv('STRIPE_API_KEY')
@@ -46,7 +46,7 @@ def create_payemnt(price, email):
     #     },
     # }
     
-    my_task.apply_async(eta=datetime.now(IST) + timedelta(seconds=30))
+    # my_task.apply_async(eta=datetime.now(IST) + timedelta(seconds=30))
     session['stripe_session'] = s['id']
     print(session['stripe_session'])
     return s['url']
