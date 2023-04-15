@@ -1,0 +1,514 @@
+  /* Add this to the CSS */
+  /* make the container a flex container */
+  html, body {
+    display: flex;
+    flex-direction: column;
+    min-height: 168vh;
+    background-color: #f2f2f2;
+    flex-grow: 1;
+    align-content: center;
+    overflow-x: hidden;
+    width: 100%;
+
+  }
+  /* flex-grow property makes the main content takes remaining space */
+  main {
+    flex-grow: 1;
+  }
+
+  /* Add this to your style.css file */
+header {
+    width: 100%;
+    height: 52vh; /* Make the banner height equal to the full screen height */
+    z-index: 1;
+
+        /* The image used */
+        background-image: url('../static/image1_Copy.jpg');
+
+        /* Set a specific height */
+        /* min-height: 500px; */
+
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+  }
+
+  #image-banner img {
+    width: 100%;
+    position: relative;
+    object-fit: cover;
+    z-index: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    transition: background-image 0.5s ease-in-out; /* Add the transition property */
+  }
+
+  .change-banner {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .slide-in {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .bulletText{
+    font-size: 1.5rem;
+    opacity: 0;
+    height: 0px;
+  }
+
+  /* IMAGES ROW */
+  .image_row{
+    margin-top: 40px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+  }
+
+  .image_row_bullets{
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-gap: 120px;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+  }
+
+
+  img {
+    max-width:100%;
+    max-height:100%;
+    border-radius: 10px;
+  }
+
+  .centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  }
+
+  .container1 {
+      position: relative;
+      text-align: center;
+      color: white;
+    }
+
+  /*NAVBAR*/
+  .navbar {
+    font-size: 30px;
+    padding-top: 100px;
+    font-weight: 600;
+  }
+
+  .dropdown-menu{
+    position: absolute;
+  }
+
+  .nav-link{
+    color: #cecccc;
+  }
+  /* CSS for calendar portion*/
+  .wrapper {
+    width: 550px;
+    border-radius: 10px;
+    background: #ffffff;
+    margin-bottom: 20px;
+    transition: all .55s ease;
+    opacity: 0;
+    height: 0px;
+  }
+  .wrapper .wrapper_header{
+    display: flex;
+    align-items: center;
+    padding: 30px 60px 10px;
+    justify-content: space-between;
+  }
+
+  .wrapper_header .current-date{
+    font-size: 1.45rem;
+    font-weight: 500;
+  }
+
+  .wrapper_header .icons span{
+    height: 50px;
+    width: 38px;
+    color: #878787;
+    font-size: 1.9rem;
+    margin: 0 1px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 50%;
+  }
+
+  .wrapper_header .icons span:hover{
+    background: #cecccc;
+  }
+
+  .wrapper_header .icons span:last-child{
+    margin-right: -10px;
+  }
+
+  .calendar{
+    padding: 20px;
+  }
+
+  .calendar ul{
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .calendar .days{
+    margin-bottom: 40px;
+  }
+
+  .calendar .weeks li{
+    font-weight: 600;
+    font-size: 22px;
+    width: calc(95% / 7);
+  }
+
+  .calendar ul li{
+    position: relative;
+  }
+
+  .calendar .days li{
+    z-index: 1;
+    margin-top: 30px;
+    font-size:20px;
+    width: 40px;
+    height: 40px;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+
+  .calendar ul li::before{
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 40px;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #collapsedCalendar{
+    margin-top: 40px;!important
+  }
+
+  .active{
+    cursor: pointer;
+  }
+
+  .active:hover::before{
+    cursor: pointer;
+    background: #cecccc;
+  }
+
+  .inactive{
+    color: #aaa;
+    cursor: auto;
+  }
+
+  .calendar ul {
+    padding-inline-start: 40px;
+  }
+
+
+  .clickedDays{
+    background: #494949;
+    border-radius: 50%;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background: #cecccc;
+  }
+
+  .logo-image{
+    width: 186px;
+    height: 186px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-top: -6px;
+    padding: .375rem .75rem;
+}
+
+   #options {
+    width: 550px;
+    height: 1px;
+    border-radius: 10px;
+    background:#ffffff;
+    margin-bottom: 20px;
+  }
+
+  #options {
+    opacity: 0;
+    height: 0px;
+    transition: all .55s ease;
+  }
+
+   #options.show {
+    opacity: 1;
+    height: 250px;
+  }
+
+  .column1{
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+  }
+
+
+  .column_bullets{
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    transition: all .55s ease;
+    height: 0px;
+    opacity: 0;
+    background-color: #c9c9c9;
+    border-radius: 10px;
+  }
+
+  .column_new{
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .row_new{
+    font-weight: 500;
+    margin: 7px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+    justify-items: stretch;
+    align-items: baseline;
+    justify-content: space-evenly;
+    align-content: center;
+  }
+
+  .row1{
+    font-weight: 500;
+    margin: 7px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+  }
+
+  .row2{
+    font-weight: 500;
+    margin: 7px;
+    margin-top: 10px;
+    height: 90px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
+    border-radius: 10px;
+  }
+
+  .border{
+    border: 3.5px solid #dee2e6!important
+  }
+
+  .btn{
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #1d7d07;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    box-shadow: 3px 3px 2px 0 rgb(0 0 0 / 15%)
+  }
+  .btn:visited{
+    background-color: #28a745;
+  }
+
+  #loginBtn, #logoutBtn{
+    background-color: cornflowerblue;
+  }
+
+  #loginBtn:hover{
+    border-color: aqua;
+    background-color: aqua;
+  }
+  #logoutBtn:hover{
+    border-color: aqua;
+    background-color: aqua;
+  }
+
+  #registerBtn{
+    background-color:crimson;
+  }
+
+  #registerBtn:hover{
+    background-color: rgb(255, 0, 51);
+    border-color: rgb(255, 0, 51);
+  }
+
+  .disabled{
+    cursor: auto;
+    background-color: #63805d;
+  }
+
+  #checkoutBtn{
+    opacity: 0;
+    height: 0px;
+    transition: all .55s ease;
+  }
+
+  .my-select-menu {
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  /* .my-select-menu::part(listbox) {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #1d7d07;
+    border-radius: 5px;
+  } */
+
+  .footerElement{
+    margin-right: 15px;
+    padding: 5px;
+  }
+
+
+  @media only screen and (max-width: 739px){
+    header{
+      height: 37vh;
+      min-height: 0;
+      width: 120vw;
+    }
+    h2{
+      font-size: 3.2vw;
+    }
+
+    #welcomeMsg{
+      font-size: 1.5rem;
+    }
+
+    #rideHeader{
+      font-size: 1rem;
+    }
+
+    .wrapper{
+      width: 86vw;
+    }
+
+    .wrapper .wrapper_header{
+      padding: 5px 18px 10px;
+    }
+
+    .wrapper .wrapper_header .current-date{
+      font-size: 1.4rem;
+    }
+
+    #options{
+      width: 86vw;
+    }
+
+    .weeks{
+    width: 100vw;
+    font-size: 2.5vw;
+    padding-inline-start: 0px;
+    font-size: 2vw;
+    margin-inline:0px;
+    margin-left:0px;
+    margin-right:0px;
+    }
+
+    .calendar,.calendar ul{
+      padding: 0;
+      padding-inline-start: 0px;
+    }
+
+    .calendar .weeks li{
+      font-size: 15px;
+      width: 8vw;
+      margin-left: 8px;
+    }
+
+    .calendar .days{
+      width: 70vw;
+    }
+    .calendar .days li{
+      width: 7vw;
+      font-size: 15px;
+    }
+
+    #collapsedCalendar{
+      height: 580px;
+      width: 86vw;
+    }
+
+    /* Styling for navbar */
+    .navbar{
+      padding-top: 0px;
+      font-size: 20px;
+    }
+    .logo-image{
+      width: 120px;
+      height: 120px;
+    }
+
+  }
+
+  @media only screen and (min-width: 740px) and (max-device-width: 950px){
+    .navbar{
+      font-size: 25px;
+      padding-top: 19px;
+      font-weight: 600;
+    }
+
+    #collapsedCalendar{
+      width: 68vw;
+    }
+
+    #options{
+      width: 68vw;
+    }
+    .logo-image{
+      width: 160px;
+      height: 160px;
+    }
+    header{
+      width: 120vw;
+    }
+  }
+
+  @media only screen and (min-width: 300px) and (max-width: 920px){
+  .calendar ul {
+    padding-inline-start: calc(((100vw - 700px)/100)*50);
+  }
+  header{
+    width: 100%;
+  }
+}
+
+@media only screen and (min-height: 650px) and (max-height: 950px){
+  .bulletText{
+    font-size: 0.7rem;
+  }
+  #collapsedCalendar{
+    height: 610px;
+  }
+}

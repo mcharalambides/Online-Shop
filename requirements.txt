@@ -1,0 +1,10 @@
+flask
+flask_sqlalchemy
+flask_session
+datetime
+python-dotenv
+pdfkit
+sqlalchemy
+mysql-connector-python
+mysqlclient
+Celery

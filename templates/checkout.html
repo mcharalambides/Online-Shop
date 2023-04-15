@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Online Shop</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="../static/checkoutStyle.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+</head>
+<body>
+  <my-header></my-header>
+  <div style="flex-grow:1" class="column1">
+    <div id="checkoutInfo">
+        <div id="personlInfo" class="clickable"><h1>Date Selected and Cost</h1></div>
+        <div id="personlInfoCollapse" class="hiddenElement">
+        <div class="innerInfo">
+          <h1 class="">The date you selected is: {{session['day'] + '/' + session['month'] + '/' + session['year'] + ' at ' + session['time']}}</h1>
+          <h1 class="">Number of People: {{session['people']}}</h1>
+          <h1 class="">The ride you chose is : {{session['ride']}}</h1>
+        </div>
+          <h1 style= "color: #284722" class="">The Final Cost is : {{session['price']}}€</h1>
+        </div>
+      </div>
+      <div id="checkoutInfo">
+        <div class="column1"></div>
+          <div id="dateSelected" class="clickable"><h1>Personal Information</h1></div>
+          <form id="submitOrder" action="/submitOrder" method="POST">
+          <div id="dateSelectedCollapse" class="hiddenElement">
+            {% if session['user'] %}
+            <input required type="text" class="form-control" name="firstName" placeholder="First Name" value = "{{data[0]}}" required="required" id="firstName" minlength="1">
+            {% else %}
+            <input required type="text" class="form-control" name="firstName" placeholder="First Name" required="required" id="firstName" minlength="1">
+            {% endif %}
+
+            {% if session['user'] %}
+            <input required type="text" class="form-control" name="lastName" placeholder="Last Name" value = "{{data[1]}}" required="required" id="lastName" minlength="1">
+            {% else %}
+            <input required type="text" class="form-control" name="lastName" placeholder="Last Name" required="required" id="lastName" minlength="1">
+            {% endif %}
+
+            {% if session['user'] %}
+            <input required type="email" class="form-control" name="email" placeholder="Email" value="{{data[2]}}" required="required" id="email" minlength="5">
+            {% else %}
+            <input required type="email" class="form-control" name="email" placeholder="Email" required="required" id="email" minlength="5">
+            {% endif %}
+
+            <!-- <div style="background-color: gainsboro;" class="form-control"></div> -->
+            <!-- <h4>Birthday</h4>
+            <h4>Ethnicity</h4>
+            <h4>Place of Residence</h4> -->
+            {% if session['user'] %}
+            <input required type="tel" class="form-control" name="telephone" placeholder="Telephone" value="{{data[3]}}" required="required" id="telephone" minlength="8">
+            {% else %}
+            <input required type="tel" class="form-control" name="telephone" placeholder="Telephone" required="required" id="telephone" minlength="8">
+            {% endif %}
+            <select form="submitOrder" class="form-control" id="ethnicity" name="ethnicity">
+              <option value="" disabled selected hidden>Ethnicity</option>
+            </select>
+            <select form="submitOrder" class="form-control" id="residence" name="residence">
+              <option value="" disabled selected hidden>Place of Residence</option>
+            </select>
+            <div class="column_new">
+              <div class="row_new">            
+                <h4>Date of Birth</h4>
+                <input required type="date" class="form-control" name="birthday" value="2018-07-22" min="2018-01-01" max="2018-12-31" id="birthday">
+              </div>
+              <div class="row_new">
+                <h4>Driving License</h4>
+                <input type="checkbox"  name="license"  id="license" fdprocessedid="s44qxv">
+              </div>
+            </div>
+          </div>
+        </div>
+      <!-- <div class="cost"><h1 class="">Cost</h1></div> -->
+      <div style="padding-bottom:10px;">
+        <button type="submit" class="btn btn-outline-success">Buy Now</a>
+      </div>
+    </form>
+    </div>
+  </div>
+  <my-footer></my-footer>
+
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+  <script src="elements.js"></script>
+  <script src="checkoutScript.js"></script>
+</body>
+</html>
