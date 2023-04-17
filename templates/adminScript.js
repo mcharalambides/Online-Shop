@@ -21,7 +21,7 @@ $("#adminfilters").on("click",function(){
     var dateTo = document.getElementById('dateToInstructor').value;
 
     $.post("/instructorLeave",{'dateFrom': dateFrom, 'dateTo':dateTo}, function () {
-        
+
     }).then(function(){
         alert("Succes");
     })
@@ -43,15 +43,17 @@ function dateFormat(date, index){
 
 
 $(document).ready(function () {
+    if('ontouchstart' in document.documentElement)
+    document.body.style.zoom = "30%";
 
-// Execute a function when the user presses a key on the keyboard
-$("input").on("keypress", function(event) {
-  // If the user presses the "Enter" key on the keyboard
-  if (event.key === "Enter" && ($('#firstName').is(':focus') || $('#lastName').is(':focus') || $('#dateFrom').is(':focus') || $('#dateto').is(':focus')) ) {
-    // Cancel the default action, if needed
-    // Trigger the button element with a click
-    document.getElementById("adminfilters").click();
-  }
+    // Execute a function when the user presses a key on the keyboard
+    $("input").on("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter" && ($('#firstName').is(':focus') || $('#lastName').is(':focus') || $('#dateFrom').is(':focus') || $('#dateto').is(':focus')) ) {
+        // Cancel the default action, if needed
+        // Trigger the button element with a click
+        document.getElementById("adminfilters").click();
+      }
 });
 });
 
@@ -60,7 +62,7 @@ $('.pageMarker').on('click', function(){
     const lastName = document.getElementById("lastName").value;
     const dateFrom = document.getElementById("dateFrom").value;
     const dateTo = document.getElementById("dateTo").value;
-    
+
     $.get("/nextPage",{'firstName': firstName, 'lastName':lastName, 'dateFrom':dateFrom, 'dateTo':dateTo, 'procedure':this.id}, function (result) {
         filltable(result[0]);
         document.getElementById("page").innerHTML = result[1] + 1;
@@ -90,12 +92,12 @@ function filltable(result){
         if(isSorted){
             if( sortfield === 'dateofOrder'){
                 document.getElementById(sortfield).style.backgroundColor = '#797777';
-                document.getElementById('datetoRide').style.backgroundColor = '#adadad'; 
+                document.getElementById('datetoRide').style.backgroundColor = '#adadad';
             }
             if( sortfield === 'datetoRide'){
                 document.getElementById(sortfield).style.backgroundColor = '#797777';
                 document.getElementById('dateofOrder').style.backgroundColor = '#adadad';
-            } 
+            }
         }
 };
 

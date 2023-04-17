@@ -6,6 +6,10 @@ rides2 = ['Easy Enduro 1H','First Timers','2T Enduro'];
 var times;
 var selectedTime,selectedDay;
 $(document).ready(function () {
+
+    if('ontouchstart' in document.documentElement)
+        document.body.style.zoom = "30%";
+
     getSchedule();
     console.log(times)
     createTable();
@@ -17,7 +21,7 @@ $(document).ready(function () {
 function getSchedule(){
 
     $.ajax({
-        type: 'POST',       
+        type: 'POST',
         url: "/getSchedule",
         context: document.body,
         global: false,
@@ -107,7 +111,7 @@ function createTable(){
           row.appendChild(saturday);
           row.appendChild(sunday);
           row.appendChild(delCell);
-    
+
           table.appendChild(row);
         }
 }
@@ -121,19 +125,19 @@ $(document).on('click','.time_slot', function(){
         const timeValue = customersTable.rows[index].cells[0].innerHTML;
 
 
-        document.getElementById("cellToUpdate").innerHTML = "Updating " + customersTable.rows[0].cells[this.cellIndex].innerHTML 
+        document.getElementById("cellToUpdate").innerHTML = "Updating " + customersTable.rows[0].cells[this.cellIndex].innerHTML
         + " " + timeValue;
 
         const ridesTable = document.getElementById("rides");
         cellRides.length = 0;
-        
+
         //Set the time and day of the cell selected
         selectedDay = this.id.split('&')[0];
         selectedTime = this.id.split('&')[1];
         cellRides = this.innerHTML.split('<br>');
         let instructorNumber = cellRides.pop().split(':')[1];
         cellRides.pop();
-        
+
         $('#rides').empty();
         cellRides.map((item) =>{
         let row = document.createElement("tr");
@@ -167,13 +171,13 @@ $(document).on('click','.time_slot', function(){
         finalrow.appendChild(finalcellButton);
         ridesTable.appendChild(finalrow);
 
-        
+
         let filteredArray = []
         //find rides that are not in time slot
         for (var i = 0; i < rides2.length; i++)
             if(!cellRides.includes(" "+ rides2[i]))
                 filteredArray.push(rides2[i]);
-        
+
 
         finalOptions.length = 0;
         //populate select with option
@@ -250,10 +254,10 @@ $("#submit").on("click", function(){
 
     for(var i=0; i<cellRides.length; i++)
         newCellRides.push(ridesReverse[cellRides[i].trim()]);
-    
+
     const ridesString = newCellRides.join('+');
     window.location.href = "/updateFromAdmin?cellRides=" + ridesString + "&instructors=" + document.getElementById("instrctNum").value +"&day="
-    + selectedDay + "&time=" + selectedTime;  
+    + selectedDay + "&time=" + selectedTime;
 });
 
 $(document).on('click','.delCellButton', function(){
@@ -262,5 +266,5 @@ $(document).on('click','.delCellButton', function(){
     const time = this.parentNode.parentNode.cells[0].innerHTML;
     if (confirm("You are about to delete the time slot: " + time))
         window.location.href = "/deleteTimeRow?time=" + time;
-    
+
     });
