@@ -277,7 +277,7 @@ header {
   .column_bullets{
     flex-direction: column;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     max-width: 100%;
     transition: all .55s ease;
     height: 0px;

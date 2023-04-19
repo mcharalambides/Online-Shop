@@ -254,7 +254,7 @@ class MyHeader extends HTMLElement {
     connectedCallback(){
         this.innerHTML  =`
         <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav style="width:90%" class="navbar navbar-expand-lg navbar-light">
           <div class="container-fluid">
             <div class="collapse navbar-collapse container-fluid justify-content-center" id="navbarScroll">
               <div style="padding-right: 40px;">
@@ -290,10 +290,10 @@ class MyHeader extends HTMLElement {
 			  <a class="nav-link" href="/userProfile" tabindex="-1" aria-disabled="true">Profile</a>
 			</li>
 			{% endif %}
-		  </ul>` + 
+		  </ul>` +
             //   <div style="padding-left:60px;">
             //     <button class="btn btn-outline-success" type="submit">BOOK NOW</button>
-            //   </div> 
+            //   </div>
 			`
               {% if not session['user'] %}
               <div style="padding-left:60px;">
