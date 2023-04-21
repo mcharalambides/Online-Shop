@@ -254,7 +254,7 @@ class MyHeader extends HTMLElement {
     connectedCallback(){
         this.innerHTML  =`
         <header>
-        <nav style="width:90%" class="navbar navbar-expand-lg navbar-light">
+        <nav style="width:80%" class="navbar navbar-expand-lg navbar-light">
           <div class="container-fluid">
             <div class="collapse navbar-collapse container-fluid justify-content-center" id="navbarScroll">
               <div style="padding-right: 40px;">

@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    document.body.style.zoom = "90%";
+    if('ontouchstart' in document.documentElement)
+        document.body.style.zoom = "80%";
+
     populateCountries(countryList);
     birthday = document.getElementById("birthday");
     var today = new Date();

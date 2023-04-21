@@ -7,7 +7,7 @@
     background-color: #f2f2f2;
     flex-grow: 1;
     align-content: center;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
 
   }
@@ -22,17 +22,21 @@ header {
     height: 52vh; /* Make the banner height equal to the full screen height */
     z-index: 1;
 
-        /* The image used */
-        background-image: url('../static/image1_Copy.jpg');
+    /* The image used */
+    background-image: url('../static/image1_Copy.jpg');
 
-        /* Set a specific height */
-        /* min-height: 500px; */
+    /* Set a specific height */
+    /* min-height: 500px; */
 
-        /* Create the parallax scrolling effect */
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
   }
 
   #image-banner img {
@@ -107,7 +111,7 @@ header {
   /*NAVBAR*/
   .navbar {
     font-size: 30px;
-    padding-top: 100px;
+    padding-top: 0px;
     font-weight: 600;
   }
 
@@ -337,6 +341,23 @@ header {
     border: 1px solid transparent;
     box-shadow: 3px 3px 2px 0 rgb(0 0 0 / 15%)
   }
+
+  .ride{
+    background-color: #838383;
+    border-color: #838383;
+
+  }
+
+
+  .ride:hover{
+    border-color: #acacac;
+    background-color: #acacac;
+  }
+  .ride:active{
+    border-color: #acacac!important;
+    background-color: #acacac!important;
+  }
+
   .btn:visited{
     background-color: #28a745;
   }
@@ -394,7 +415,7 @@ header {
 
   @media only screen and (max-width: 739px){
     header{
-      height: 37vh;
+      height: 42vh;
       min-height: 0;
       width: 120vw;
     }
@@ -462,7 +483,7 @@ header {
 
     /* Styling for navbar */
     .navbar{
-      padding-top: 0px;
+      margin-top: -40px;
       font-size: 20px;
     }
     .logo-image{
@@ -506,7 +527,7 @@ header {
 
 @media only screen and (min-height: 650px) and (max-height: 950px){
   .bulletText{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
   #collapsedCalendar{
     height: 610px;

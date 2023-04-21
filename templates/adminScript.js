@@ -44,7 +44,7 @@ function dateFormat(date, index){
 
 $(document).ready(function () {
     if('ontouchstart' in document.documentElement)
-    document.body.style.zoom = "30%";
+        document.body.style.zoom = "20%";
 
     // Execute a function when the user presses a key on the keyboard
     $("input").on("keypress", function(event) {

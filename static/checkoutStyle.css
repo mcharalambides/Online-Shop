@@ -3,14 +3,14 @@ html,body{
 }
 
 header{
-  height: 25vh;
+  height: 34vh;
 }
 
-.navbar {
-  font-size: 30px;
-  padding-top: 0px;
-  font-weight: 600;
-}
+/*.navbar {*/
+/*  font-size: 30px;*/
+/*  padding-top: 0px;*/
+/*  font-weight: 600;*/
+/*}*/
 #checkoutInfo {
     margin-top: 2%;
     margin-bottom: 2%;
@@ -20,7 +20,7 @@ header{
     height: 100%;
     min-height: 100% !important;
     width: 60vw;
-    
+
     /* display: grid;
     grid-gap: 60px;
     grid-template-columns: 1fr 1fr;
@@ -142,6 +142,6 @@ h4{
       header{
         height: 37vh;
       }
-  
+
   }
 
