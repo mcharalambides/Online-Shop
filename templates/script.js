@@ -107,29 +107,6 @@ function renderCalendar(month,year){
         }
     }
 
-    // console.log(inactiveDays2);
-    // $.get('/getInactiveDays', function(result){
-    //     var inactiveDays = new Array();
-
-    //     result.forEach(item =>inactiveDays.push(new Date(item).getDate()))
-
-    // console.log(new Date(disabledDays[0]).ge)
-    //Populate calendar with days
-    //Old Way
-    // for(var i=1; i<=lastDateofMonth; i++){
-    //     li = document.createElement("li");
-    //     li.innerHTML = i;
-
-    //     var diff = days_between(new Date(currYear, currMonth - 1, i));
-    //     if((diff > 21) || (diff <= 0))
-    //         dayActivation = "inactive";
-    //     else
-    //         dayActivation = "active";
-
-    //     li.setAttribute('class','calendarDay ' + dayActivation);
-    //     li.setAttribute('id',i);
-    //     ul.appendChild(li);
-    // }
 
     var dayActivation;
     //Populate calendar with days
@@ -249,8 +226,24 @@ $(".ride").on("click", function(e){
     const calendar = document.querySelector("#collapsedCalendar");
     const checkoutBtn = document.querySelector("#checkoutBtn");
 
-    if(calendar.style.opacity == 0){
+    for(var i=0; i<rideTexts.length; i++){
+            rideTexts[i].style.opacity = "0";
+            rideTexts[i].style.height = "0px";
+            rideTexts[i].style.margin = "0px";
+            rideTexts[i].style.padding = "0px";
+            }
 
+    for(var i=0; i<bulletTexts.length; i++){
+        bulletTexts[i].style.opacity = "0";
+        bulletTexts[i].style.height = "0px";
+        }
+
+    calendar.style.opacity = "0";
+    checkoutBtn.style.opacity = "0";
+    calendar.style.height = "0px";
+    checkoutBtn.style.height = "0px";
+
+    setTimeout(function(){
         rideTexts = document.getElementById(chosenRide + "text");
         rideTexts.style.opacity = "1";
         rideTexts.style.height = "auto";
@@ -269,31 +262,15 @@ $(".ride").on("click", function(e){
         checkoutBtn.style.opacity = "1";
         var hasTouchscreen = 'ontouchstart' in window;
 
-    if(hasTouchscreen)
+        if(hasTouchscreen)
             calendar.style.height = "610px";
         else
             calendar.style.height = "630px";
         checkoutBtn.style.height = "40px";
-    }
-    else{
 
-        for(var i=0; i<rideTexts.length; i++){
-            rideTexts[i].style.opacity = "0";
-            rideTexts[i].style.height = "0px";
-            rideTexts[i].style.margin = "0px";
-            rideTexts[i].style.padding = "0px";
-        }
 
-        for(var i=0; i<bulletTexts.length; i++){
-            bulletTexts[i].style.opacity = "0";
-            bulletTexts[i].style.height = "0px";
-        }
+    }, 250);
 
-        calendar.style.opacity = "0";
-        checkoutBtn.style.opacity = "0";
-        calendar.style.height = "0px";
-        checkoutBtn.style.height = "0px";
-    }
 });
 
 /*Converting into a POST method and setting the required fields*/
