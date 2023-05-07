@@ -3,7 +3,6 @@ import time
 # import sys
 # import logging
 from flask import Flask,flash, render_template,send_file,request,redirect,url_for, session, Response
-import mysql.connector
 # from mysql.connector import pooling
 # import MySQLdb
 from db_connector import Database
@@ -314,7 +313,11 @@ def checkoutComplete():
         # SO YOU CAN CALL EVERY TIME'''
         return redirect(url_for("hello_world"))
 
-    session['price'] = price[session['ride']] * int(session['people'])
+    if session['time'] == '9:00-11:00':
+        session['price'] = price[session['ride']] * int(session['people']) *2
+    else:
+        session['price'] = price[session['ride']] * int(session['people'])
+
     if "user" in session.keys():
         # GET DATA FOR USER IF LOGGED IN
         myresult = mydb.execute(f"SELECT * FROM Users WHERE username ='{session['user']}'")
@@ -431,7 +434,16 @@ def successPage():
 @app.route('/cancel', methods=['POST','GET'])
 def cancelPage():
     print("i am in cancelPage")
+
+
+    stripe.api_key = os.getenv('STRIPE_API_KEY')
     if 'stripe_session' in session.keys():
+        try:
+            stripe.checkout.Session.expire(session['stripe_session'])
+        except Exception as e:
+            print(str(e))
+            print("i failed to receive the info for the stripe session")
+
         mydb.execute_update("DELETE FROM tempOrders WHERE UserOrdered='" + session['stripe_session'] + "'")
         for key in list(session.keys()):
             if key not in ['_permanent', 'user', 'firstName']:
@@ -532,16 +544,55 @@ def checkFields(username=None,firstName=None,lastName=None,email=None, \
     return True
 
 
+# @app.route('/downloadPDF', methods=['GET'])
+# def downloadPDF():
+    # if 'admin' not in session:
+    #     return redirect(url_for("hello_world"))
+#     from views import filterData
+#     myTable = filterData()
+#     html_string = myTable.to_html()
+#     pdfkit.from_string(html_string, "orderTable.pdf", configuration=pdfConfig)
+#     return send_file('orderTable.pdf', download_name='orderTable.pdf',mimetype='application/pdf')
+
 @app.route('/downloadPDF', methods=['GET'])
 def downloadPDF():
+    if 'admin' not in session:
+        return redirect(url_for("hello_world"))
+
     from views import filterData
+
     myTable = filterData()
-    html_string = myTable.to_html()
-    pdfkit.from_string(html_string, "orderTable.pdf", configuration=pdfConfig)
-    return send_file('orderTable.pdf', download_name='orderTable.pdf',mimetype='application/pdf')
+    from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtGui import QTextDocument, QFont, QTextOption
+    from PyQt5.QtPrintSupport import QPrinter
+
+    # from PySide2.QtPrintSupport.Q import QTextDocument, QPrinter, QApplication
+
+    import sys
+    app = QApplication(sys.argv)
+
+    option = QTextOption()
+    option.setWrapMode(QTextOption.WrapAnywhere)
+    doc = QTextDocument()
+    font = QFont()
+    font.setPointSize(6)
+    doc.setHtml(myTable.to_html())
+    doc.setDefaultFont(font)
+    doc.setDefaultTextOption(option)
+    printer = QPrinter()
+    printer.setOutputFileName("orderTable2.pdf")
+    printer.setOutputFormat(QPrinter.PdfFormat)
+    printer.setPageSize(QPrinter.A4)
+    printer.setPageMargins(0, 0, 0, 0, QPrinter.Millimeter)
+
+    doc.print_(printer)
+    return send_file('orderTable2.pdf', download_name='orderTable2.pdf',mimetype='application/pdf')
 
 @app.route('/downloadCSV', methods=['GET'])
 def downloadCSV():
+    if 'admin' not in session:
+        return redirect(url_for("hello_world"))
+
     from views import filterData
     myTable = filterData()
     myTable.to_csv('customers.csv', encoding='utf-8', index=False)

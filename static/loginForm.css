@@ -1,10 +1,14 @@
 body {
     background-image: linear-gradient(90deg, #4aa5f0, #6700bf);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
-  
+
   .login-form {
     width: 340px;
-    margin: 300px auto;
+    margin: 0px auto;
     font-size: 15px;
   }
   .login-form form {

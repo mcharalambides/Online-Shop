@@ -8,3 +8,4 @@ sqlalchemy
 mysql-connector-python
 mysqlclient
 Celery
+PyQt5==5.13.2
