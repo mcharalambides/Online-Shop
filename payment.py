@@ -36,8 +36,8 @@ def create_payemnt(price, email):
         invoice_creation= {"enabled": True},
         expires_at = int(time.time()) + 1800,
         payment_intent_data = {'receipt_email': email},
-        line_items = [{'price_data':{'currency':'EUR', 'product_data':{'name':'Sayous Booking'}, 'unit_amount':price*100}, 'quantity':1}])
-    
+        line_items = [{'price_data':{'currency':'EUR', 'product_data':{'name':'Sayious Booking'}, 'unit_amount':price*100}, 'quantity':1}])
+
     # celeryApp.conf.beat_schedule = {
     #     'execute_task_at_specific_timestamp': {
     #         'task': 'tasks.my_task',
@@ -45,7 +45,7 @@ def create_payemnt(price, email):
     #         'args': (),
     #     },
     # }
-    
+
     # my_task.apply_async(eta=datetime.now(IST) + timedelta(seconds=30))
     session['stripe_session'] = s['id']
     print(session['stripe_session'])

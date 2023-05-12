@@ -34,7 +34,6 @@ $(document).ready(function () {
 
     var date = new Date();
 
-    document.body.style.zoom = "80%";
     var date2 = new Date(date.getFullYear(), date.getMonth()+1, 0)
 
     $.ajax({
