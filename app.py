@@ -300,7 +300,6 @@ def checkoutPage():
     session['people'] = checkoutData['people']
     session['ride'] = rides[checkoutData['ride']]
 
-    # return render_template("checkout.html", data=[data['day'],data['month'],data['year']])
     return "Success"
 
 @app.route('/checkoutComplete', methods = ["GET"])
@@ -312,11 +311,13 @@ def checkoutComplete():
         # IN SESSION ARE SET SO HE CAN SUBMIT FALSE ORDERS. CREATE A FUNCTION THAT CHECKS THE FIELDS
         # SO YOU CAN CALL EVERY TIME'''
         return redirect(url_for("hello_world"))
+    
+    first = session['time'].split("-")[0]
+    second = session['time'].split("-")[1]
+    FMT = '%H:%M'
 
-    if session['time'] == '9:00-11:00':
-        session['price'] = price[session['ride']] * int(session['people']) *2
-    else:
-        session['price'] = price[session['ride']] * int(session['people'])
+    hours = int(str(datetime.strptime(second, FMT) - datetime.strptime(first, FMT)).split(":")[0])
+    session['price'] = price[session['ride']] * int(session['people']) * hours
 
     if "user" in session.keys():
         # GET DATA FOR USER IF LOGGED IN
@@ -508,17 +509,24 @@ app.add_url_rule('/getOrders', view_func=views.getOrders, methods=['GET'])
 def checkFields(username=None,firstName=None,lastName=None,email=None, \
                 telephone=None,ethnicity=None,residence=None,birthday=None,driving=None):
 
-    if not isinstance(username,str) or len(username) > 50 or len(username) == 0 or username.isspace:
-        raise ValueError("Invalid Username")
-
-    if not isinstance(firstName,str) or len(firstName) > 50 or len(firstName) == 0 or firstName.isspace:
-        raise ValueError("Invalid FirstName")
-
-    if not isinstance(lastName,str) or len(lastName) > 50 or len(lastName) == 0 or lastName.isspace:
-        raise ValueError("Invalid LastName")
-
-    if not isinstance(email,str) or len(email) > 50 or len(email) == 0 or email.isspace:
-        raise ValueError("Invalid email")
+    if username:
+        if not isinstance(username,str) or len(username) > 50 or len(username) <= 0 or username.isspace:
+            raise ValueError("Invalid Username")
+        
+    if firstName:
+        if not isinstance(firstName,str) or len(firstName) > 50 or len(firstName) <= 0 or firstName.isspace:
+            raise ValueError("Invalid FirstName")
+        
+    if lastName:
+        if not isinstance(lastName,str) or len(lastName) > 50 or len(lastName) <= 0 or lastName.isspace:
+            raise ValueError("Invalid LastName")
+        
+    if email:
+        if not isinstance(email,str) or len(email) > 50 or len(email) <= 0 or email.isspace:
+            raise ValueError("Invalid email")
+    if telephone:
+        if not isinstance(telephone,str) or len(telephone) > 50 or len(telephone) <= 0 or telephone.isspace:
+            raise ValueError("Invalid LastName")
 
     import re
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
@@ -527,14 +535,17 @@ def checkFields(username=None,firstName=None,lastName=None,email=None, \
 
     from countries import available_countries
 
-    if ethnicity != '' and ethnicity not in available_countries():
-        raise ValueError("Invalid Ethnicity")
 
-    if residence != '' and residence not in available_countries():
-        raise ValueError("Invalid Residence")
+    if ethnicity:
+        if ethnicity != '' and ethnicity not in available_countries():
+            raise ValueError("Invalid Ethnicity")
+
+    if residence:
+        if residence != '' and residence not in available_countries():
+            raise ValueError("Invalid Residence")
 
     try:
-        finalBirthday = datetime.datetime(birthday)
+        datetime.fromisoformat(birthday)
     except Exception as e:
         raise ValueError("Invalid Birthday")
 
