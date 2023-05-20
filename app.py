@@ -45,6 +45,7 @@ mydb = Database()
 import schedule,views
 #AVAILABLE RIDES
 rides = {'EE' : 'Easy Enduro 1H', 'FT': 'First Timers', '2T': '2T Enduro'}
+shortRides = {'Easy Enduro 1H': 'EE', 'First Timers': 'FT', '2T Enduro': '2T'}
 motors = {'EE' : 6, 'FT': 4, '2T': 5}
 price = {'Easy Enduro 1H' : 60, 'First Timers': 70, '2T Enduro': 120}
 
@@ -274,7 +275,6 @@ def checkoutPage():
             print("problem with year")
             return Response(status=500)
 
-        print(checkoutData['people'])
         if not ('people' in checkoutData.keys() and checkoutData['people'] is not None and checkoutData['people'].isnumeric() ):
             print("problem with people")
             return Response(status=500)
@@ -311,13 +311,20 @@ def checkoutComplete():
         # IN SESSION ARE SET SO HE CAN SUBMIT FALSE ORDERS. CREATE A FUNCTION THAT CHECKS THE FIELDS
         # SO YOU CAN CALL EVERY TIME'''
         return redirect(url_for("hello_world"))
-    
+
+    try:
+        checkDateTimePeople()
+    except Exception as e:
+        print(e)
+        print(session)
+        return redirect(url_for("hello_world"))
+
     first = session['time'].split("-")[0]
     second = session['time'].split("-")[1]
     FMT = '%H:%M'
 
-    hours = int(str(datetime.strptime(second, FMT) - datetime.strptime(first, FMT)).split(":")[0])
-    session['price'] = price[session['ride']] * int(session['people']) * hours
+    hours = abs(int(str(datetime.strptime(second, FMT) - datetime.strptime(first, FMT)).split(":")[0]))
+    session['price'] = (price[session['ride']] + (hours - 1) *30) * int(session['people'])
 
     if "user" in session.keys():
         # GET DATA FOR USER IF LOGGED IN
@@ -339,6 +346,11 @@ def submitOrder():
     '''YOU NEED TO CHECK THAT ALL FIELDS ARE SET HERE BECAUSE HE CAN MAKE AN ORDER THEN PRESS THE BACK BUTTON AND GO BACK TO THE CHECKOUT
     PAGE TO RESUMBIT AND ALREADY SUBMITED PAGE. OFCOURSE HE WILL BE AT THE STRIPE PAGE BUT STILL'''
     #########EDW NA ELEKSW TA PEDIA##############
+    if not set(['day','month','year','ride','time','people']).issubset(set(session.keys())):
+        print("missing fields")
+        print(session)
+        return redirect(url_for("hello_world"))
+
     username = session.get("user", "Guest")
     ride = session['ride']
     dateToRide = session["year"] + "-" + session["month"] + "-" + session["day"]
@@ -353,11 +365,19 @@ def submitOrder():
     birthday = request.form['birthday']
     driving = "YES" if 'license' in  request.form.keys() else "NO"
 
-    if not set(['day','month','year','ride','time','people']).issubset(set(session.keys())):
-        print("missing fields")
-        print(session)
+    try:
+        checkFields(firstName=firstName, lastName=lastName, email=email, telephone=telephone, ethnicity=ethnicity,
+                residence=residence, birthday=birthday, driving=driving)
+    except Exception as e:
+        print(e)
         return redirect(url_for("hello_world"))
 
+    try:
+        checkDateTimePeople()
+    except Exception as e:
+        print(e)
+        print(session)
+        return redirect(url_for("hello_world"))
 
     from payment import create_payemnt
     url = create_payemnt(session['price'], email)
@@ -371,9 +391,10 @@ def submitOrder():
     # send_email(email, time, dateToRide)
     # from payment import create_payemnt
     # url = create_payemnt(session['price'])
-
+    for key in list(session.keys()):
+        if key not in ['_permanent', 'user', 'firstName','stripe_session']:
+            del session[key]
     return redirect(url)
-    # return redirect(url_for("hello_world"))
 
 
 @app.route('/success', methods=['POST','GET'])
@@ -483,12 +504,6 @@ def registerUser():
     val = (username, password, email, firstName, lastName, telephone)
     mydb.execute_update(sql, val)
 
-    # except:
-    #     print("an error occured redirecting you")
-    #     print(traceback.format_exc())
-    #     print(sys.exc_info()[2])
-    #     return redirect(url_for("registerPage"))
-
     return redirect(url_for('loginPage'))
 
 app.add_url_rule('/admin', view_func=views.admin)
@@ -509,23 +524,20 @@ app.add_url_rule('/getOrders', view_func=views.getOrders, methods=['GET'])
 def checkFields(username=None,firstName=None,lastName=None,email=None, \
                 telephone=None,ethnicity=None,residence=None,birthday=None,driving=None):
 
-    if username:
-        if not isinstance(username,str) or len(username) > 50 or len(username) <= 0 or username.isspace:
-            raise ValueError("Invalid Username")
-        
+
     if firstName:
-        if not isinstance(firstName,str) or len(firstName) > 50 or len(firstName) <= 0 or firstName.isspace:
+        if not isinstance(firstName,str) or len(firstName) > 50 or len(firstName) <= 0 or firstName.isspace():
             raise ValueError("Invalid FirstName")
-        
+
     if lastName:
-        if not isinstance(lastName,str) or len(lastName) > 50 or len(lastName) <= 0 or lastName.isspace:
+        if not isinstance(lastName,str) or len(lastName) > 50 or len(lastName) <= 0 or lastName.isspace():
             raise ValueError("Invalid LastName")
-        
+
     if email:
-        if not isinstance(email,str) or len(email) > 50 or len(email) <= 0 or email.isspace:
+        if not isinstance(email,str) or len(email) > 50 or len(email) <= 0 or email.isspace():
             raise ValueError("Invalid email")
     if telephone:
-        if not isinstance(telephone,str) or len(telephone) > 50 or len(telephone) <= 0 or telephone.isspace:
+        if not isinstance(telephone,str) or len(telephone) > 50 or len(telephone) <= 0 or telephone.isspace():
             raise ValueError("Invalid LastName")
 
     import re
@@ -551,6 +563,28 @@ def checkFields(username=None,firstName=None,lastName=None,email=None, \
 
     if driving != 'YES' and driving != 'NO':
         raise ValueError("Invalid Driving")
+
+    return True
+
+
+
+def checkDateTimePeople():
+
+    month = '0' + session['month'] if len(session['month']) == 1 else session['month']
+    day = '0' + session['day'] if len(session['day']) == 1 else session['day']
+    date = session['year'] + "-" + month + "-" + day
+
+    if date not in getInactiveDays():
+        print(getInactiveDays())
+        print(date)
+        raise ValueError("Invalid Date")
+
+    if session['time'] not in time_slots(0,shortRides[session['ride']],date):
+        raise ValueError("Invalid time slot")
+
+    people = get_available_motors(date, shortRides[session['ride']], session['time'])
+    if int(session['people']) < 1 or int(session['people']) > people:
+        raise ValueError("Invalid number of people")
 
     return True
 

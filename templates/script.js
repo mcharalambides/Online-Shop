@@ -340,3 +340,7 @@ $('#availableTimeSlots').change( function() {
         console.log(data);
       });
   });
+
+$("body").on("click",".active", function(){
+    window.location = "#options";
+});

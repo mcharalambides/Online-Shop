@@ -106,10 +106,10 @@ def filterData():
     temp_conn.close()
 
     if session['firstName']:
-        myTable = myTable.loc[myTable['FirstName'] == session['firstName']]
+        myTable = myTable.loc[myTable['FirstName'].str.lower() == session['firstName'].lower()]
 
     if session['lastName']:
-        myTable = myTable.loc[myTable['LastName'] == session['lastName']]
+        myTable = myTable.loc[myTable['LastName'].str.lower()  == session['lastName'].lower()]
 
     if session['dateFrom']:
         myTable = myTable[myTable['Date to Ride'] >= datetime.strptime(session['dateFrom'], '%Y-%m-%d').date()]

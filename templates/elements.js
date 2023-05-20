@@ -323,7 +323,7 @@ class MyFooter extends HTMLElement {
         this.innerHTML  =`
         <footer class="bg-light py-3">
         <div class="container">
-          <p class="text-center">Copyright &copy;2021 Online Shop</p>
+          <p class="text-center">Copyright &copy;2023 Sayious Adventure Park</p>
           <div class="d-flex justify-content-center">
             <a class="footerElement" href="https://www.enduroridescyprus.com/terms-conditions1">Terms of Service</a>
             <a class="footerElement" href="https://www.enduroridescyprus.com/terms-conditions1">Privacy Policy</a>
