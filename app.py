@@ -441,6 +441,12 @@ def successPage():
         val = (username, ride,datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S"), dateToRide, time, people, firstName, lastName, email, telephone, ethnicity, residence, birthday, driving)
         mydb.execute_update(sql, val)
 
+        #Add permanent record for order with stripe session id
+        sql = "INSERT INTO tempOrdersPermanent(`UserOrdered`, `ride`,`Date of Order`, `Date to Ride`, `Time`, `Number of People`, `FirstName`, `LastName`, `email`, `telephone`, `Ethnicity`, `Residence`, `Date Of Birth`, `Driving License`) " \
+        +"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (session['stripe_session'], ride,datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S"), dateToRide, time, people, firstName, lastName, email, telephone, ethnicity, residence, birthday, driving)
+        mydb.execute_update(sql, val)
+
         for key in list(session.keys()):
             if key not in ['_permanent', 'user', 'firstName']:
                 del session[key]
